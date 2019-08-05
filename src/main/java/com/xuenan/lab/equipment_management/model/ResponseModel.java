@@ -1,4 +1,4 @@
-package com.xuenan.starter.equipment_management.model;
+package com.xuenan.lab.equipment_management.model;
 
 /**
  * @author Howie Lu

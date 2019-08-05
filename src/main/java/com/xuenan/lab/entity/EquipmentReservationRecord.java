@@ -1,4 +1,4 @@
-package com.xuenan.starter.entity;
+package com.xuenan.lab.entity;
 
 import java.util.Date;
 

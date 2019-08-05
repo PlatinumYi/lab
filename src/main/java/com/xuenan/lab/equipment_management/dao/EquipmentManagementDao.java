@@ -1,7 +1,7 @@
-package com.xuenan.starter.equipment_management.dao;
+package com.xuenan.lab.equipment_management.dao;
 
-import com.xuenan.starter.entity.EquipmentInformation;
-import com.xuenan.starter.entity.EquipmentReservationRecord;
+import com.xuenan.lab.entity.EquipmentInformation;
+import com.xuenan.lab.entity.EquipmentReservationRecord;
 import org.apache.ibatis.annotations.*;
 
 import java.util.Date;

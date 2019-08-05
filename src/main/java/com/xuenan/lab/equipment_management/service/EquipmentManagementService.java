@@ -1,6 +1,6 @@
-package com.xuenan.starter.equipment_management.service;
+package com.xuenan.lab.equipment_management.service;
 
-import com.xuenan.starter.equipment_management.model.ResponseModel;
+import com.xuenan.lab.equipment_management.model.ResponseModel;
 
 import java.util.Date;
 

@@ -1,7 +1,7 @@
-package com.xuenan.starter.equipment_management.controller;
+package com.xuenan.lab.equipment_management.controller;
 
-import com.xuenan.starter.equipment_management.model.ResponseModel;
-import com.xuenan.starter.equipment_management.service.EquipmentManagementService;
+import com.xuenan.lab.equipment_management.model.ResponseModel;
+import com.xuenan.lab.equipment_management.service.EquipmentManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

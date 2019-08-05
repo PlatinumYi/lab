@@ -1,10 +1,10 @@
-package com.xuenan.starter.equipment_management.service.impl;
+package com.xuenan.lab.equipment_management.service.impl;
 
-import com.xuenan.starter.entity.EquipmentInformation;
-import com.xuenan.starter.entity.EquipmentReservationRecord;
-import com.xuenan.starter.equipment_management.dao.EquipmentManagementDao;
-import com.xuenan.starter.equipment_management.model.ResponseModel;
-import com.xuenan.starter.equipment_management.service.EquipmentManagementService;
+import com.xuenan.lab.entity.EquipmentInformation;
+import com.xuenan.lab.entity.EquipmentReservationRecord;
+import com.xuenan.lab.equipment_management.dao.EquipmentManagementDao;
+import com.xuenan.lab.equipment_management.model.ResponseModel;
+import com.xuenan.lab.equipment_management.service.EquipmentManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
