@@ -1,4 +1,4 @@
-package com.xuenan.lab.user_management.service;
+package com.xuenan.lab.error_handler.service;
 
 import com.xuenan.lab.user_management.model.ResponseModel;
 

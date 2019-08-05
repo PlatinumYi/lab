@@ -2,17 +2,15 @@ package com.xuenan.lab.user_management.service.impl;
 
 import com.xuenan.lab.entity.LoginSession;
 import com.xuenan.lab.entity.User;
-import com.xuenan.lab.method.MD5Tools;
-import com.xuenan.lab.method.RandomSessionKey;
+import com.xuenan.lab.tool.MD5Tools;
+import com.xuenan.lab.tool.RandomSessionKey;
 import com.xuenan.lab.user_management.dao.LoginSessionDao;
 import com.xuenan.lab.user_management.dao.UserDao;
 import com.xuenan.lab.user_management.model.ResponseModel;
 import com.xuenan.lab.user_management.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 @Service
@@ -74,13 +72,13 @@ public class UserServiceImpl implements UserService {
         else{
             LoginSession session = loginSessionDao.queryLoginSessionBySchoolNumber(schoolNumber) ;
             if (session == null ){
-                String key = RandomSessionKey.getRandomChar(30);
-                loginSessionDao.createLoginSession(key,schoolNumber,BeijingToday);
+                String token = RandomSessionKey.getRandomChar(30);
+                loginSessionDao.createLoginSession(token,schoolNumber,BeijingToday);
             }//session不存在则直接创建session
             else {
                 if (session.getLoginTime().getTime() < millsValid) {
-                    String key = RandomSessionKey.getRandomChar(30);
-                    loginSessionDao.updateSessionKey(key,schoolNumber,BeijingToday);
+                    String token = RandomSessionKey.getRandomChar(30);
+                    loginSessionDao.updateSessionKey(token,schoolNumber,BeijingToday);
                 }
             }//若session已经存在，则判断是否过时，进行更新
 
@@ -91,10 +89,22 @@ public class UserServiceImpl implements UserService {
                 responseModel.setData(session);
             } // 若判断session合法，则返回登录成功信息
             else {
-                responseModel = new ResponseModel(2004,"session没有正确地被存储，请重新登录");
+                responseModel = new ResponseModel(2004,"token没有正确地被存储，请重新登录");
             }
         }
 
         return responseModel ;
+
+    }
+
+    @Override
+    public ResponseModel logout(String sessionKey) {
+
+        loginSessionDao.removeSessionKey(sessionKey);
+        if( loginSessionDao.countLoginSessionByKey(sessionKey)>0){
+            return new ResponseModel(2005,"token删除失败");
+        }else {
+            return new ResponseModel();
+        }
     }
 }

@@ -1,4 +1,4 @@
-package com.xuenan.lab.method;
+package com.xuenan.lab.tool;
 
 import java.util.Random;
 
