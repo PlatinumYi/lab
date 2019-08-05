@@ -16,7 +16,7 @@ public class LoginSession {
 
     private Integer id ;
     private String schoolNumber ;
-    private String sessionKey ;
+    private String token ;
     private Date loginTime ;
 
     public Integer getId() {
@@ -35,13 +35,6 @@ public class LoginSession {
         this.schoolNumber = schoolNumber;
     }
 
-    public String getSessionKey() {
-        return sessionKey;
-    }
-
-    public void setSessionKey(String sessionKey) {
-        this.sessionKey = sessionKey;
-    }
 
     public Date getLoginTime() {
         return loginTime;
@@ -49,5 +42,13 @@ public class LoginSession {
 
     public void setLoginTime(Date loginTime) {
         this.loginTime = loginTime;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

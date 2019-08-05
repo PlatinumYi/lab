@@ -1,7 +1,7 @@
-package com.xuenan.lab.user_management.service.impl;
+package com.xuenan.lab.error_handler.service.impl;
 
 import com.xuenan.lab.user_management.model.ResponseModel;
-import com.xuenan.lab.user_management.service.SessionErrorService;
+import com.xuenan.lab.error_handler.service.SessionErrorService;
 import org.springframework.stereotype.Service;
 
 @Service

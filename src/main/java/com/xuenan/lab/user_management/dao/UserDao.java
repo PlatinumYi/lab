@@ -1,10 +1,7 @@
 package com.xuenan.lab.user_management.dao;
 
 import com.xuenan.lab.entity.User;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.Date;
 
@@ -22,5 +19,6 @@ public interface UserDao {
     Integer checkSchoolNumberExist( @Param("schoolNumber") String schoolNUmber) ;
 
     @Select("SELECT * FROM user WHERE SCHOOL_NUMBER = #{schoolNumber} AND password=#{password}")
-    User queryUserBySchoolNumberAndPassword(@Param("schoolNumber") String schoolNumber , @Param("password") String password ); ;
+    User queryUserBySchoolNumberAndPassword(@Param("schoolNumber") String schoolNumber , @Param("password") String password );
+
 }
