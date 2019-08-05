@@ -12,7 +12,6 @@ import java.util.List;
 @Service
 public class LabInformationServiceImpl implements LabInformationService {
 
-
     @Autowired
     private LabInformationDao labInformationDao ;
 
