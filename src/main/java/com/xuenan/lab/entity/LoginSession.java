@@ -5,8 +5,8 @@ import java.util.Date;
 /**
  * CREATE TABLE `NewTable` (
  * `ID`  int(11) NOT NULL AUTO_INCREMENT ,
- * `SCHOOL_NUMBER`  varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
- * `SESSION_KEY`  varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+ * `USER_ID`  int(255) NOT NULL ,
+ * `TOKEN`  varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
  * `LOGIN_TIME`  datetime NOT NULL ,
  * PRIMARY KEY (`ID`)
  * )
@@ -15,7 +15,7 @@ import java.util.Date;
 public class LoginSession {
 
     private Integer id ;
-    private String schoolNumber ;
+    private Integer userId ;
     private String token ;
     private Date loginTime ;
 
@@ -25,14 +25,6 @@ public class LoginSession {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public String getSchoolNumber() {
-        return schoolNumber;
-    }
-
-    public void setSchoolNumber(String schoolNumber) {
-        this.schoolNumber = schoolNumber;
     }
 
 
@@ -50,5 +42,13 @@ public class LoginSession {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 }

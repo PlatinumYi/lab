@@ -70,20 +70,20 @@ public class UserServiceImpl implements UserService {
             responseModel = new ResponseModel(2003,"学号与密码不匹配") ;
         }//若学号与密码不匹配则直接返回错误
         else{
-            LoginSession session = loginSessionDao.queryLoginSessionBySchoolNumber(schoolNumber) ;
+            LoginSession session = loginSessionDao.queryLoginSessionBySchoolNumber(user.getId()) ;
             if (session == null ){
                 String token = RandomSessionKey.getRandomChar(30);
-                loginSessionDao.createLoginSession(token,schoolNumber,BeijingToday);
+                loginSessionDao.createLoginSession(token,user.getId(),BeijingToday);
             }//session不存在则直接创建session
             else {
                 if (session.getLoginTime().getTime() < millsValid) {
                     String token = RandomSessionKey.getRandomChar(30);
-                    loginSessionDao.updateSessionKey(token,schoolNumber,BeijingToday);
+                    loginSessionDao.updateSessionKey(token,user.getId(),BeijingToday);
                 }
             }//若session已经存在，则判断是否过时，进行更新
 
             //再次获取session，判断对session的操作是否生效
-            session = loginSessionDao.queryLoginSessionBySchoolNumber(schoolNumber);
+            session = loginSessionDao.queryLoginSessionBySchoolNumber(user.getId());
             if( session !=null && session.getLoginTime().getTime() >= millsValid ){
                 responseModel = new ResponseModel();
                 responseModel.setData(session);

@@ -9,20 +9,20 @@ import java.util.Date;
 public interface LoginSessionDao {
 
 
-    @Insert("INSERT INTO session(TOKEN,SCHOOL_NUMBER,LOGIN_TIME) VALUES(#{token},#{schoolNumber},#{loginTime})")
+    @Insert("INSERT INTO session(TOKEN,USER_ID,LOGIN_TIME) VALUES(#{token},#{userId},#{loginTime})")
     Integer createLoginSession(@Param("token") String token,
-                          @Param("schoolNumber") String schoolNumber,
+                          @Param("userId") Integer userId,
                           @Param("loginTime") Date loginTime);
 
-    @Select("SELECT * FROM session WHERE SCHOOL_NUMBER=#{schoolNumber}")
-    LoginSession queryLoginSessionBySchoolNumber( @Param("schoolNumber") String schoolNumber );
+    @Select("SELECT * FROM session WHERE USER_ID=#{userId}")
+    LoginSession queryLoginSessionBySchoolNumber( @Param("userId") Integer userId);
 
     @Select("SELECT COUNT(*) FROM session WHERE TOKEN=#{token}")
     Integer countLoginSessionByKey( @Param("token") String token );
 
-    @Update("UPDATE session SET TOKEN=#{token} AND LOGIN_TIME=#{loginTime} WHERE SCHOOL_NUMBER=#{schoolNumber}")
+    @Update("UPDATE session SET TOKEN=#{token} AND LOGIN_TIME=#{loginTime} WHERE USER_ID=#{userId}")
     Integer updateSessionKey(@Param("token") String token,
-                             @Param("schoolNumber") String schoolNumber,
+                             @Param("userId") Integer userId,
                              @Param("loginTime") Date loginTime);
 
     @Delete("DELETE FROM session WHERE TOKEN=#{token}")

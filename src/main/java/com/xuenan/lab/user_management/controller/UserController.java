@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -20,6 +21,7 @@ public class UserController {
     private UserService userService ;
 
     @RequestMapping("/register")
+    @ResponseBody
     public ResponseModel register( @RequestParam(value = "school_number") String schoolNumber,
                                    @RequestParam(value = "name") String name ,
                                    @RequestParam(value = "password") String password){
@@ -28,6 +30,7 @@ public class UserController {
     }
 
     @RequestMapping("/login")
+    @ResponseBody
     public ResponseModel login( @RequestParam(value = "school_number") String schoolNumber,
                                 @RequestParam(value = "password") String password){
 
@@ -35,6 +38,7 @@ public class UserController {
     }
 
     @RequestMapping("/logout")
+    @ResponseBody
     public ResponseModel logout(HttpServletRequest request){
 
         String token = request.getHeader("token") ;
