@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 public class FilterConfig {
 
     @Bean
-    public FilterRegistrationBean filterRegistrationBean(){
+    public FilterRegistrationBean loginFilterRegistrationBean(){
         FilterRegistrationBean bean = new FilterRegistrationBean();
         //bean.setFilter(new LoginFilter());
         //bean.addUrlPatterns("/information/equipment/");

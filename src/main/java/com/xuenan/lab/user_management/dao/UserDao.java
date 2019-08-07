@@ -21,4 +21,6 @@ public interface UserDao {
     @Select("SELECT * FROM user WHERE SCHOOL_NUMBER = #{schoolNumber} AND password=#{password}")
     User queryUserBySchoolNumberAndPassword(@Param("schoolNumber") String schoolNumber , @Param("password") String password );
 
+    @Select("SELECT * FROM user WHERE ID=#{id}")
+    User queryUserById(@Param("id") Integer id);
 }

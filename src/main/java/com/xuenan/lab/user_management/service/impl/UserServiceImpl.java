@@ -24,7 +24,7 @@ public class UserServiceImpl implements UserService {
     private LoginSessionDao loginSessionDao ;
 
     //所有session的生命周期为24小时
-    private static final int SESSION_LIFE = 24 ;
+    public static final int SESSION_LIFE = 24 ;
 
     @Override
     public ResponseModel register(String schoolNumber, String name, String password) {
@@ -98,13 +98,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseModel logout(String sessionKey) {
+    public ResponseModel logout(String token) {
 
-        loginSessionDao.removeSessionKey(sessionKey);
-        if( loginSessionDao.countLoginSessionByKey(sessionKey)>0){
+        loginSessionDao.removeSessionKey(token);
+        if( loginSessionDao.queryLoginSessionByKey(token) != null ){
             return new ResponseModel(2005,"token删除失败");
         }else {
             return new ResponseModel();
         }
     }
+
+
 }

@@ -13,10 +13,21 @@ import java.util.List;
 public class ResourceConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        //第一个方法设置访问路径前缀，第二个方法设置资源路径
-        registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/avatar");
-        registry.addResourceHandler("/avatar/**").addResourceLocations("file:D:/avatar/");
-        registry.addResourceHandler("/picture/**").addResourceLocations("file:D:/picture/");
+        /**
+         *  1. 实验指导文件
+         *  2. 学生提交的报告
+         *  3. 公开的资料
+         *  4. 实验室照片
+         *  5. 教师照片
+         *  6. 设备照片
+         */
+        registry.addResourceHandler("/experiment/guide/**").addResourceLocations("file:E:/SpringBootProjectResources/Lab/experiment/book/");
+        registry.addResourceHandler("/experiment/homework/**").addResourceLocations("file:E:/SpringBootProjectResources/Lab/experiment/homework/");
+        registry.addResourceHandler("/data/**").addResourceLocations("file:E:/SpringBootProjectResources/Lab/data/");
+        registry.addResourceHandler("/picture/lab/**").addResourceLocations("file:E:/SpringBootProjectResources/Lab/picture/lab/");
+        registry.addResourceHandler("/picture/teacher/**").addResourceLocations("file:E:/SpringBootProjectResources/Lab/picture/teacher/");
+        registry.addResourceHandler("/picture/equipment/**").addResourceLocations("file:E:/SpringBootProjectResources/Lab/picture/equipment/");
+
 
     }
     @Override

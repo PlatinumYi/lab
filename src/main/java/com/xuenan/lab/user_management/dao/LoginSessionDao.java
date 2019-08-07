@@ -17,8 +17,11 @@ public interface LoginSessionDao {
     @Select("SELECT * FROM session WHERE USER_ID=#{userId}")
     LoginSession queryLoginSessionBySchoolNumber( @Param("userId") Integer userId);
 
-    @Select("SELECT COUNT(*) FROM session WHERE TOKEN=#{token}")
-    Integer countLoginSessionByKey( @Param("token") String token );
+//    @Select("SELECT COUNT(*) FROM session WHERE TOKEN=#{token}")
+//    Integer countLoginSessionByKey( @Param("token") String token );
+
+    @Select("SELECT * FROM session WHERE TOKEN=#{token}")
+    LoginSession queryLoginSessionByKey( @Param("token") String token );
 
     @Update("UPDATE session SET TOKEN=#{token} AND LOGIN_TIME=#{loginTime} WHERE USER_ID=#{userId}")
     Integer updateSessionKey(@Param("token") String token,
