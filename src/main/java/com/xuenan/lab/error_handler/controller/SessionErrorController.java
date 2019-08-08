@@ -32,4 +32,10 @@ public class SessionErrorController {
         return sessionErrorService.reportNotManagerError();
     }
 
+    @RequestMapping("/not_teacher")
+    @ResponseBody
+    public ResponseModel notTeacherToken(){
+        return sessionErrorService.reportNotTeacherError();
+    }
+
 }

@@ -22,4 +22,8 @@ public class SessionErrorServiceImpl implements SessionErrorService {
     @Override
     public ResponseModel reportNotManagerError() {return new ResponseModel(2103,"当前登录用户不是管理员");
     }
+
+    @Override
+    public ResponseModel reportNotTeacherError() {return new ResponseModel(2104,"当前登录用户不是教师");
+    }
 }

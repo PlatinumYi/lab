@@ -11,8 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class ManagerFilter implements Filter {
-
+public class TeacherFilter implements Filter {
     @Autowired
     private LoginSessionService loginSessionService ;
 
@@ -42,8 +41,8 @@ public class ManagerFilter implements Filter {
                 if( user.getValid() == 0 ){
                     request.getRequestDispatcher("/error/token/invalid").forward(request,response);
                 }
-                else if( user.getType()<3){
-                    request.getRequestDispatcher("/error/token/not_manager").forward(request,response);
+                else if( user.getType()<2){
+                    request.getRequestDispatcher("/error/token/not_teacher").forward(request,response);
                 }else {
                     filterChain.doFilter(request,response);
                 }

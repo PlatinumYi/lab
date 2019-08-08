@@ -7,4 +7,5 @@ public interface SessionErrorService {
     ResponseModel reportNullError();
     ResponseModel reportInvalidError();
     ResponseModel reportNotManagerError();
+    ResponseModel reportNotTeacherError();
 }
