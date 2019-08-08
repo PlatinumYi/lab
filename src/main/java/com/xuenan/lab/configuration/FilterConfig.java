@@ -18,6 +18,11 @@ public class FilterConfig {
         bean.addUrlPatterns("/user/enable");
         bean.addUrlPatterns("/user/delete");
         bean.addUrlPatterns("/user/type");
+        bean.addUrlPatterns("/information/notice/");
+        bean.addUrlPatterns("/information/notice/ban");
+        bean.addUrlPatterns("/information/notice/enable");
+        bean.addUrlPatterns("/information/notice/update");
+        bean.addUrlPatterns("/information/notice/delete");
         return bean;
     }
 }
