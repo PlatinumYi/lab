@@ -16,25 +16,25 @@ public class NoticeController {
 
     @GetMapping("/all/valid")
     @ResponseBody
-    public ResponseModel allValidNotice(){
+    public ResponseModel queryAllValidNoticeOrderByDate(){
         return noticeService.queryAllValidNoticeOrderByDate();
     }
 
     @GetMapping("/all/invalid")
     @ResponseBody
-    public ResponseModel allInvalidNotice(){
+    public ResponseModel queryAllInvalidNoticeOrderByDate(){
         return noticeService.queryAllInvalidNoticeOrderByDate();
     }
 
     @GetMapping("/{id}")
     @ResponseBody
-    public ResponseModel allInvalidNotice(@PathVariable Integer id ){
+    public ResponseModel queryNoticeById(@PathVariable Integer id ){
         return noticeService.queryNoticeById(id);
     }
 
     @PostMapping("/")
     @ResponseBody
-    public ResponseModel allInvalidNotice(@RequestParam("title") String title,
+    public ResponseModel createNotice(@RequestParam("title") String title,
                                           @RequestParam("content") String content,
                                           @RequestParam("authorName") String authorName){
         return noticeService.createNotice(title,content,authorName);
@@ -55,7 +55,7 @@ public class NoticeController {
     //这个地方不符合RESTful规范，但Filter不区分方法，只区分URL，因此必须做出区分
     @PutMapping("/update")
     @ResponseBody
-    public ResponseModel enableNotice( @RequestParam("id") Integer id,
+    public ResponseModel updateNotice( @RequestParam("id") Integer id,
                                        @RequestParam("title") String title,
                                        @RequestParam("content") String content,
                                        @RequestParam("authorName") String authorName){
