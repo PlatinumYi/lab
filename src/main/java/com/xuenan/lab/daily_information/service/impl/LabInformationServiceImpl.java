@@ -19,12 +19,10 @@ public class LabInformationServiceImpl implements LabInformationService {
     public ResponseModel queryLabInformation() {
 
         ResponseModel responseModel ;
-        List<LabInformation> information = labInformationDao.queryLabInformation();
-        if( information == null || information.size()<1 ){
+        LabInformation information = labInformationDao.queryLabInformation();
+        if( information == null ){
             responseModel = new ResponseModel(1101,"不存在有效的实验室信息");
 
-        }else if( information.size()>1 ){
-            responseModel = new ResponseModel(1102,"有效的实验室信息多于一条");
         }else{
             responseModel = new ResponseModel();
             responseModel.setData(information);
@@ -32,4 +30,30 @@ public class LabInformationServiceImpl implements LabInformationService {
         return  responseModel ;
 
     }
+
+    @Override
+    public ResponseModel editLabInformation(String name, String introduction) {
+
+        ResponseModel model ;
+        Integer count = labInformationDao.countInformation();
+        if(count<0){
+            labInformationDao.createInformation(name,introduction);
+            count = labInformationDao.countInformation();
+            if( count>0 ){
+                model = new ResponseModel();
+            }else {
+                model = new ResponseModel(1102,"编辑实验室介绍失败");
+            }
+        }else {
+            LabInformation labInformation = labInformationDao.queryLabInformation();
+            Integer result = labInformationDao.updateInformation(name,introduction,labInformation.getId());
+            if( result>0 ){
+                model = new ResponseModel();
+            }else {
+                model = new ResponseModel(1102,"编辑实验室介绍失败");
+            }
+        }
+        return model ;
+    }
+
 }

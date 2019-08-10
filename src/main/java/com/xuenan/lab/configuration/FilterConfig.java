@@ -21,11 +21,20 @@ public class FilterConfig {
         bean.addUrlPatterns("/information/photo/delete/*");
         bean.addUrlPatterns("/information/photo/name/*");
         bean.addUrlPatterns("/information/photo/new");
-        bean.addUrlPatterns("/information/notice/");
-        bean.addUrlPatterns("/information/notice/ban");
-        bean.addUrlPatterns("/information/notice/enable");
-        bean.addUrlPatterns("/information/notice/update");
-        bean.addUrlPatterns("/information/notice/delete");
+        bean.addUrlPatterns("/information/lab/edit");
+        bean.addUrlPatterns("/information/humanity/new");
+        bean.addUrlPatterns("/information/humanity/delete/*");
+        bean.addUrlPatterns("/information/equipment/delete/*");
+        bean.addUrlPatterns("/information/equipment/ban/*");
+        bean.addUrlPatterns("/information/equipment/enable/*");
+        bean.addUrlPatterns("/information/equipment/new");
+        bean.addUrlPatterns("/information/equipment/all/invalid");
+        bean.addUrlPatterns("/information/notice/new");
+        bean.addUrlPatterns("/information/notice/ban/*");
+        bean.addUrlPatterns("/information/notice/enable/*");
+        bean.addUrlPatterns("/information/notice/update/*");
+        bean.addUrlPatterns("/information/notice/delete/*");
+        bean.addUrlPatterns("/information/notice/all/invalid");
         return bean;
     }
 }

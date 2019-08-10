@@ -16,7 +16,6 @@ public class HumanityInformation {
     private String name ;
     private String photoSrc ;
     private String introduction ;
-    private Integer valid ;
 
 
     public Integer getId() {
@@ -49,13 +48,5 @@ public class HumanityInformation {
 
     public void setIntroduction(String introduction) {
         this.introduction = introduction;
-    }
-
-    public Integer getValid() {
-        return valid;
-    }
-
-    public void setValid(Integer valid) {
-        this.valid = valid;
     }
 }

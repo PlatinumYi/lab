@@ -32,7 +32,7 @@ public class NoticeController {
         return noticeService.queryNoticeById(id);
     }
 
-    @PostMapping("/")
+    @PostMapping("/new")
     @ResponseBody
     public ResponseModel createNotice(@RequestParam("title") String title,
                                           @RequestParam("content") String content,
@@ -40,22 +40,22 @@ public class NoticeController {
         return noticeService.createNotice(title,content,authorName);
     }
 
-    @PutMapping("/ban")
+    @PutMapping("/ban/{id}")
     @ResponseBody
-    public ResponseModel banNotice( @RequestParam("id") Integer id ){
+    public ResponseModel banNotice( @PathVariable Integer id ){
         return noticeService.banNotice(id);
     }
 
-    @PutMapping("/enable")
+    @PutMapping("/enable/{id}")
     @ResponseBody
-    public ResponseModel enableNotice( @RequestParam("id") Integer id ){
+    public ResponseModel enableNotice( @PathVariable Integer id ){
         return noticeService.enableNotice(id);
     }
 
     //这个地方不符合RESTful规范，但Filter不区分方法，只区分URL，因此必须做出区分
-    @PutMapping("/update")
+    @PutMapping("/update/{id}")
     @ResponseBody
-    public ResponseModel updateNotice( @RequestParam("id") Integer id,
+    public ResponseModel updateNotice( @PathVariable Integer id,
                                        @RequestParam("title") String title,
                                        @RequestParam("content") String content,
                                        @RequestParam("authorName") String authorName){
@@ -63,9 +63,9 @@ public class NoticeController {
     }
 
     //这个地方不符合RESTful规范，但Filter不区分方法，只区分URL，因此必须做出区分
-    @DeleteMapping("/delete")
+    @DeleteMapping("/delete/{id}")
     @ResponseBody
-    public ResponseModel deleteNotice( @RequestParam("id") Integer id ){
+    public ResponseModel deleteNotice( @PathVariable Integer id ){
         return noticeService.deleteNotice(id);
     }
 }

@@ -15,7 +15,6 @@ public class LabInformation {
     private Integer id ;
     private String name ;
     private String introduction ;
-    private Integer valid ;
 
 
     public Integer getId() {
@@ -39,12 +38,4 @@ public class LabInformation {
     }
 
     public void setIntroduction(String introduction) { this.introduction = introduction; }
-
-    public Integer getValid() {
-        return valid;
-    }
-
-    public void setValid(Integer valid) {
-        this.valid = valid;
-    }
 }

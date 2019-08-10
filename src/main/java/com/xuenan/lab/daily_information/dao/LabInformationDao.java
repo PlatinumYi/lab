@@ -1,8 +1,7 @@
 package com.xuenan.lab.daily_information.dao;
 
 import com.xuenan.lab.entity.LabInformation;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -10,7 +9,15 @@ import java.util.List;
 @Mapper
 public interface LabInformationDao {
 
-    @Select("SELECT * FROM lab_information WHERE valid=1")
-    List<LabInformation> queryLabInformation() ;
+    @Select("SELECT * FROM lab_information LIMIT 1")
+    LabInformation queryLabInformation() ;
 
+    @Select("SELECT COUNT(*) FROM lab_inforamtion")
+    Integer countInformation();
+
+    @Insert("INSERT INTO lab_information(NAME,INTRODUCTION) VALUES (#{name},#{introduction})")
+    Integer createInformation(@Param("name") String name ,@Param("introduction") String introduction );
+
+    @Update("UPDATE lab_information SET NAME=#{name} AND INTRODUCTION=#{introduction} WHERE ID=#{id}")
+    Integer updateInformation(@Param("name") String name ,@Param("introduction") String introduction,@Param("id") Integer id);
 }
