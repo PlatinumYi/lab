@@ -4,5 +4,8 @@ import com.xuenan.lab.user_management.model.ResponseModel;
 
 public interface SessionErrorService {
 
-    ResponseModel reportError();
+    ResponseModel reportNullError();
+    ResponseModel reportInvalidError();
+    ResponseModel reportNotManagerError();
+    ResponseModel reportNotTeacherError();
 }

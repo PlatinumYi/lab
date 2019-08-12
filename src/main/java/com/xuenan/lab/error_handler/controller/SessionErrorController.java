@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping("/error/session")
+@RequestMapping("/error/token")
 public class SessionErrorController {
 
     @Autowired
@@ -16,7 +16,26 @@ public class SessionErrorController {
 
     @RequestMapping("/invalid")
     @ResponseBody
-    public ResponseModel invalidSessionKey(){
-        return sessionErrorService.reportError() ;
+    public ResponseModel invalidToken(){
+        return sessionErrorService.reportInvalidError();
     }
+
+    @RequestMapping("/null")
+    @ResponseBody
+    public ResponseModel nullToken(){
+        return sessionErrorService.reportNullError();
+    }
+
+    @RequestMapping("/not_manager")
+    @ResponseBody
+    public ResponseModel notManagerToken(){
+        return sessionErrorService.reportNotManagerError();
+    }
+
+    @RequestMapping("/not_teacher")
+    @ResponseBody
+    public ResponseModel notTeacherToken(){
+        return sessionErrorService.reportNotTeacherError();
+    }
+
 }
