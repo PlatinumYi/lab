@@ -5,7 +5,11 @@ import com.xuenan.lab.equipment_management.service.EquipmentManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * @author Howie Lu
@@ -44,12 +48,26 @@ public class EquipmentManagementController {
     }
 
     @PostMapping("/reservationRecord")
-    ResponseModel reserveEquipment(@RequestParam("equipmentId") Integer equipmentId,
-                                   @RequestParam("userId") Integer userId,
-                                   @RequestParam("reserveTime") Date reserveTime,//?Date怎么传
-                                   @RequestParam("reserveDuration") Integer reserveDuration){
+    ResponseModel reserveEquipment(HttpServletRequest request) throws ParseException {
+        Integer equipmentId = Integer.valueOf(request.getParameter("equipmentId"));
+        Integer userId = Integer.valueOf(request.getParameter("userId"));
+        Integer reserveDuration = Integer.valueOf(request.getParameter("reserveDuration"));
+        String time = request.getParameter("reserveTime");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        TimeZone china = TimeZone.getTimeZone("GMT+:08:00");
+        formatter.setTimeZone(china);
+        Date reserveTime = formatter.parse(time);
         return equipmentManagementService.reserveEquipment(equipmentId, userId, reserveTime, reserveDuration);
     }
+
+    //@PostMapping("/reservationRecord")
+    //ResponseModel reserveEquipment(@RequestParam("equipmentId") Integer equipmentId,
+    //                               @RequestParam("userId") Integer userId,
+    //                               @RequestParam("reserveTime") Date reserveTime,//?Date怎么传
+    //                               @RequestParam("reserveDuration") Integer reserveDuration){
+    //
+    //    return equipmentManagementService.reserveEquipment(equipmentId, userId, reserveTime, reserveDuration);
+    //}
 
     @DeleteMapping("/reservationRecord")
     ResponseModel cancelReservation(@RequestParam("equipmentId") Integer equipmentId,

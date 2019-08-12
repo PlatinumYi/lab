@@ -41,7 +41,7 @@ public interface EquipmentManagementDao {
      * @return 受影响的行数
      */
     @Insert("INSERT INTO equipment_reservation_record (equipment_id, user_id, reserve_time, reserve_duration) " +
-            "VALUES #{equipmentId}, #{userId}, #{reserveTime}, #{reserveDuration}")
+            "VALUES (#{equipmentId}, #{userId}, #{reserveTime, jdbcType=TIMESTAMP}, #{reserveDuration})")
     Integer reserveEquipment(@Param("equipmentId") Integer equipmentId,
                              @Param("userId") Integer userId,
                              @Param("reserveTime") Date reserveTime,
