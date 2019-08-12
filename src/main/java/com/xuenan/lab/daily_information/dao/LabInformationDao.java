@@ -18,6 +18,6 @@ public interface LabInformationDao {
     @Insert("INSERT INTO lab_information(NAME,INTRODUCTION) VALUES (#{name},#{introduction})")
     Integer createInformation(@Param("name") String name ,@Param("introduction") String introduction );
 
-    @Update("UPDATE lab_information SET NAME=#{name} AND INTRODUCTION=#{introduction} WHERE ID=#{id}")
+    @Update("UPDATE lab_information SET NAME=#{name},INTRODUCTION=#{introduction} WHERE ID=#{id}")
     Integer updateInformation(@Param("name") String name ,@Param("introduction") String introduction,@Param("id") Integer id);
 }

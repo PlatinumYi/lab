@@ -33,7 +33,7 @@ public interface NoticeDao {
     @Delete("DELETE FROM notice WHERE ID=#{id} AND valid=0")
     Integer deleteNotice(@Param("id") Integer id );
 
-    @Update("UPDATE notice SET TITLE=#{title} AND CONTENT=#{content} AND AUTHOR_NAME=#{authorName} AND UPDATED_AT=#{updatedAt} WHERE ID=#{id}")
+    @Update("UPDATE notice SET TITLE=#{title},CONTENT=#{content},AUTHOR_NAME=#{authorName},UPDATED_AT=#{updatedAt} WHERE ID=#{id}")
     Integer updateNotice(@Param("id") Integer id,
                          @Param("title") String title,
                          @Param("content") String content,

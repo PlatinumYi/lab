@@ -23,7 +23,7 @@ public interface LoginSessionDao {
     @Select("SELECT * FROM session WHERE TOKEN=#{token}")
     LoginSession queryLoginSessionByKey( @Param("token") String token );
 
-    @Update("UPDATE session SET TOKEN=#{token} AND LOGIN_TIME=#{loginTime} WHERE USER_ID=#{userId}")
+    @Update("UPDATE session SET TOKEN=#{token},LOGIN_TIME=#{loginTime} WHERE USER_ID=#{userId}")
     Integer updateSessionKey(@Param("token") String token,
                              @Param("userId") Integer userId,
                              @Param("loginTime") Date loginTime);

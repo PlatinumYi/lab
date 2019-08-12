@@ -2,6 +2,7 @@ package com.xuenan.lab.configuration;
 
 import com.xuenan.lab.filter.LoginFilter;
 import com.xuenan.lab.filter.ManagerFilter;
+import com.xuenan.lab.filter.TeacherFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 public class FilterConfig {
 
     @Bean
-    public FilterRegistrationBean loginFilterRegistrationBean(){
+    public FilterRegistrationBean managerFilterRegistrationBean(){
         FilterRegistrationBean bean = new FilterRegistrationBean();
         bean.setFilter(new ManagerFilter());
         bean.addUrlPatterns("/user/all/*");
@@ -35,6 +36,16 @@ public class FilterConfig {
         bean.addUrlPatterns("/information/notice/update/*");
         bean.addUrlPatterns("/information/notice/delete/*");
         bean.addUrlPatterns("/information/notice/all/invalid");
+        return bean;
+    }
+
+    @Bean
+    public FilterRegistrationBean teahcerFilterRegistrationBean(){
+        FilterRegistrationBean bean = new FilterRegistrationBean();
+        bean.setFilter(new TeacherFilter());
+        bean.addUrlPatterns("/experiment/self");
+        bean.addUrlPatterns("/experiment/new");
+        bean.addUrlPatterns("/experiment/update/*");
         return bean;
     }
 }
