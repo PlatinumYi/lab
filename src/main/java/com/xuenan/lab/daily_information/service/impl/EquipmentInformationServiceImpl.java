@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
-@Service
+@Service("EquipmentInformationService")
 public class EquipmentInformationServiceImpl implements EquipmentInformationService {
 
     @Autowired

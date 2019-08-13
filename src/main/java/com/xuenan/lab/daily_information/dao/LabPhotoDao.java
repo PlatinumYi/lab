@@ -2,10 +2,10 @@ package com.xuenan.lab.daily_information.dao;
 
 import com.xuenan.lab.entity.LabPhoto;
 import org.apache.ibatis.annotations.*;
-import org.springframework.web.bind.annotation.PutMapping;
 
 import java.util.List;
 
+@Mapper
 public interface LabPhotoDao {
 
 
