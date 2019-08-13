@@ -46,6 +46,19 @@ public class FilterConfig {
         bean.addUrlPatterns("/experiment/self");
         bean.addUrlPatterns("/experiment/new");
         bean.addUrlPatterns("/experiment/update/*");
+        bean.addUrlPatterns("/report/experiment/*");
+        bean.addUrlPatterns("/report/mark/*");
+        return bean;
+    }
+
+    @Bean
+    public FilterRegistrationBean studentFilterRegistrationBean(){
+        FilterRegistrationBean bean = new FilterRegistrationBean();
+        bean.setFilter(new LoginFilter());
+        bean.addUrlPatterns("/report/student/*");
+        bean.addUrlPatterns("/report/remove/*");
+        bean.addUrlPatterns("/report/new");
+        bean.addUrlPatterns("/report/upload/*");
         return bean;
     }
 }
