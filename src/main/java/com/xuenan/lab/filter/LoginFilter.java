@@ -10,6 +10,7 @@ import com.xuenan.lab.user_management.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
+import sun.net.httpserver.HttpsServerImpl;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -39,7 +40,7 @@ public class LoginFilter implements Filter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
 
-        HttpServletRequest request = (HttpServletRequest) servletRequest ;
+        HttpServletRequest request =  (HttpServletRequest) servletRequest ;
         HttpServletResponse response = (HttpServletResponse) servletResponse ;
         String token = request.getHeader("token") ;
         if( token == null ){
