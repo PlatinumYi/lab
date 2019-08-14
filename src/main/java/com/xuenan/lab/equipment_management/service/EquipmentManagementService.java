@@ -54,11 +54,11 @@ public interface EquipmentManagementService {
 
     /**
      * 用户取消预约
-     * @param equipmentId 设备id
+     * @param recordId 预约记录id
      * @param userId 用户id
      * @return 数据模型
      */
-    ResponseModel cancelReservation(Integer equipmentId, Integer userId);
+    ResponseModel cancelReservation(Integer recordId, Integer userId);
 
     /**
      * 教师审批设备预约申请

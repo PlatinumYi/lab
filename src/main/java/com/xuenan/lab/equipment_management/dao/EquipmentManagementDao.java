@@ -25,7 +25,10 @@ public interface EquipmentManagementDao {
     @Select("SELECT * FROM equipment_information WHERE valid=0")
     List<EquipmentInformation> getReservedEquipments();
 
-    // 一个人只能存在一台预约未使用的设备
+    @Select("SELECT * FROM equipment_reservation_record WHERE equipment_id=#{equipmentId}")
+    List<EquipmentReservationRecord> getReservationRecordByEquipmentId(Integer equipmentId);
+
+    // 一个人最多预约五台实验设备
     @Select("SELECT * FROM equipment_reservation_record WHERE user_id=#{userId} and reserve_time > now()")
     List<EquipmentReservationRecord> getReservationRecord(@Param("userId") Integer userId);
 
@@ -49,12 +52,12 @@ public interface EquipmentManagementDao {
 
     /**
      * 取消预约
-     * @param equipmentId 实验设备id
+     * @param recordId 预约记录id
      * @param userId 用户id
      * @return 被影响的行数
      */
-    @Delete("DELETE FROM equipment_reservation_record WHERE equipment_id=#{equipmentId} AND user_id=#{userId}")
-    Integer cancelReservation(@Param("equipmentId") Integer equipmentId,
+    @Delete("DELETE FROM equipment_reservation_record WHERE id=#{recordId} AND user_id=#{userId}")
+    Integer cancelReservation(@Param("recordId") Integer recordId,
                               @Param("userId") Integer userId);
 
     @Update("UPDATE equipment_reservation_record SET status=#{opinion}, approver=#{teacherId} " +

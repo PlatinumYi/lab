@@ -70,9 +70,9 @@ public class EquipmentManagementController {
     //}
 
     @DeleteMapping("/reservationRecord")
-    ResponseModel cancelReservation(@RequestParam("equipmentId") Integer equipmentId,
+    ResponseModel cancelReservation(@RequestParam("recordId") Integer recordId,
                                     @RequestParam("userId") Integer userId){
-        return equipmentManagementService.cancelReservation(equipmentId, userId);
+        return equipmentManagementService.cancelReservation(recordId, userId);
     }
 
     @PutMapping("/reservationRecord")
