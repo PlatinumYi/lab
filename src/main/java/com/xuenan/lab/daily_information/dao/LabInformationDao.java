@@ -12,7 +12,7 @@ public interface LabInformationDao {
     @Select("SELECT * FROM lab_information LIMIT 1")
     LabInformation queryLabInformation() ;
 
-    @Select("SELECT COUNT(*) FROM lab_inforamtion")
+    @Select("SELECT COUNT(*) FROM lab_information")
     Integer countInformation();
 
     @Insert("INSERT INTO lab_information(NAME,INTRODUCTION) VALUES (#{name},#{introduction})")

@@ -19,22 +19,22 @@ public interface UserDao {
     @Select("SELECT COUNT(*) FROM user WHERE SCHOOL_NUMBER = #{schoolNumber}")
     Integer checkSchoolNumberExist( @Param("schoolNumber") String schoolNUmber) ;
 
-    @Select("SELECT (ID,SCHOOL_NUMBER,NAME,CREATED_AT,TYPE,VALID) FROM user WHERE SCHOOL_NUMBER = #{schoolNumber} AND password=#{password}")
+    @Select("SELECT * FROM user WHERE SCHOOL_NUMBER = #{schoolNumber} AND password=#{password}")
     User queryUserBySchoolNumberAndPassword(@Param("schoolNumber") String schoolNumber , @Param("password") String password );
 
-    @Select("SELECT (ID,SCHOOL_NUMBER,NAME,CREATED_AT,TYPE,VALID) FROM user WHERE ID=#{id}")
+    @Select("SELECT ID,SCHOOL_NUMBER,NAME,CREATED_AT,TYPE,VALID FROM user WHERE ID=#{id}")
     User queryUserById(@Param("id") Integer id);
 
-    @Select("SELECT (ID,SCHOOL_NUMBER,NAME,CREATED_AT,TYPE,VALID) FROM user WHERE valid = 1")
+    @Select("SELECT ID,SCHOOL_NUMBER,NAME,CREATED_AT,TYPE,VALID FROM user WHERE valid = 1")
     List<User> queryValidUsers();
 
-    @Select("SELECT (ID,SCHOOL_NUMBER,NAME,CREATED_AT,TYPE,VALID) FROM user WHERE valid = 0")
+    @Select("SELECT ID,SCHOOL_NUMBER,NAME,CREATED_AT,TYPE,VALID FROM user WHERE valid = 0")
     List<User> queryInvalidUsers();
 
     @Delete("DELETE FROM user WHERE ID=#{id} AND valid=0")
     Integer removeUserById(@Param("id") Integer id );
 
-    @Select("SELECT (ID,SCHOOL_NUMBER,NAME,CREATED_AT,TYPE,VALID) FROM user WHERE SCHOOL_NUMBER=#{key} OR NAME LIKE '%'#{key}'%'")
+    @Select("SELECT ID,SCHOOL_NUMBER,NAME,CREATED_AT,TYPE,VALID FROM user WHERE SCHOOL_NUMBER=#{key} OR NAME LIKE CONCAT('%',#{key},'%')")
     List<User> queryUserBySchoolNumberOrName(@Param("key") String key);
 
     @Update("UPDATE user SET valid = 0 WHERE ID=#{id}")

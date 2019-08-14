@@ -6,7 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 public interface ReportService {
 
     ResponseModel createReport(Integer userId,Integer experimentId);
-    ResponseModel queryReportByStudentId(Integer currentUser,Integer id);
+    ResponseModel queryReportByStudentId(Integer currentUser);
     ResponseModel queryReportByExperimentId(Integer currentUser,Integer id);
     ResponseModel changeReportFile(Integer currentUser,MultipartFile file,Integer reportId);
     ResponseModel removeReport(Integer currentUser,Integer id);

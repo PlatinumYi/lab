@@ -22,6 +22,10 @@ public class LabPhotoServiceImpl implements LabPhotoService {
     //图片文件最大不能高于5M
     private static final long MAX_PHOTO_SIZE = 5*1024*1024 ;
 
+    private static final String LOCAL_STORAGE ="E:/SpringBootProjectResources/Lab" ;
+
+    private static final String MODULE_URL = "/picture/lab/";
+
     @Override
     public ResponseModel queryAllPhotos() {
 
@@ -61,22 +65,23 @@ public class LabPhotoServiceImpl implements LabPhotoService {
         else if( file.getSize() > MAX_PHOTO_SIZE ){
             return new ResponseModel(1406,"文件过大");
         }
-        String src = "/picture/lab/" ;
+
         String fileName = file.getOriginalFilename() ;
-
-
         String suffix = fileName.substring(fileName.lastIndexOf(".")+1);
-        if( !suffix.equals("jpg") || !suffix.equals("png") ){
+
+        if( !suffix.equals("jpg") && !suffix.equals("png") ){
             model = new ResponseModel(1403,"非法的文件后缀名");
         }else {
 
             Date date = new Date();
             String currentMills = String.valueOf(date.getTime());
-            fileName = currentMills+suffix ; //根据当前毫秒数命名文件，防止重名
+            fileName = currentMills+"."+suffix ; //根据当前毫秒数命名文件，防止重名
+            System.out.println(fileName);
             try {
-                File targetFile = new File(src+fileName);
+                File targetFile = new File(LOCAL_STORAGE+MODULE_URL+fileName);
+                System.out.println(targetFile.getPath());
                 file.transferTo(targetFile);
-                labPhotoDao.createPhoto(name,src+fileName);
+                labPhotoDao.createPhoto(name,MODULE_URL+fileName);
                 model = new ResponseModel() ;
             }catch (IOException e){
                 model = new ResponseModel(1404,"文件存储失败");
@@ -97,6 +102,8 @@ public class LabPhotoServiceImpl implements LabPhotoService {
             Integer result = labPhotoDao.deletePhotoById(id);
             if(result>0){
                 model = new ResponseModel();
+                File targetFile = new File(LOCAL_STORAGE+labPhoto.getSrc());
+                targetFile.delete();
             }else {
                 model = new ResponseModel(1407,"删除照片失败");
             }

@@ -5,6 +5,7 @@ import com.xuenan.lab.entity.User;
 import com.xuenan.lab.experiment_management.model.ResponseModel;
 import com.xuenan.lab.experiment_management.service.ReportService;
 import com.xuenan.lab.user_management.service.LoginSessionService;
+import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -30,23 +31,23 @@ public class ReportController {
         return reportService.queryReportByExperimentId(currentUser.getUserId(),id);
     }
 
-    @GetMapping("/student/{id}")
+    @GetMapping("/self")
     @ResponseBody
-    public ResponseModel queryReportByStudentId(HttpServletRequest request, @PathVariable Integer id){
+    public ResponseModel queryReportByStudentId(HttpServletRequest request){
         String token = request.getHeader("token");
         LoginSession currentUser = loginSessionService.queryValidLoginSessionByToken(token);
-        return reportService.queryReportByStudentId(currentUser.getUserId(),id);
+        return reportService.queryReportByStudentId(currentUser.getUserId());
     }
 
     @PostMapping("/new")
     @ResponseBody
-    public ResponseModel createReport(HttpServletRequest request,@RequestParam("experimentId") Integer experimentId){
+    public ResponseModel createReport(HttpServletRequest request,@RequestParam("experiment_id") Integer experimentId){
         String token = request.getHeader("token");
         LoginSession currentUser = loginSessionService.queryValidLoginSessionByToken(token);
         return reportService.createReport(currentUser.getUserId(),experimentId);
     }
 
-    @PostMapping("/remove/{id}")
+    @DeleteMapping("/delete/{id}")
     @ResponseBody
     public ResponseModel removeReport(HttpServletRequest request,@PathVariable Integer id){
         String token = request.getHeader("token");

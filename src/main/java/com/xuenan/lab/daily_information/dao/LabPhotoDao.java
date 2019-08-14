@@ -16,7 +16,7 @@ public interface LabPhotoDao {
     LabPhoto queryPhotoById(@Param("id") Integer id);
 
     @Insert("INSERT INTO lab_photo(NAME,SRC) VALUES (#{name},#{src})")
-    Integer createPhoto(String name,String src);
+    Integer createPhoto(@Param("name") String name,@Param("src") String src);
 
     @Delete("DELETE FROM lab_photo WHERE ID=#{id}")
     Integer deletePhotoById(@Param("id") Integer id );

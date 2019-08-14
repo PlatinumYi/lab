@@ -19,7 +19,7 @@ public class UserController {
 
     @RequestMapping("/register")
     @ResponseBody
-    public ResponseModel register( @RequestParam(value = "school_number") String schoolNumber,
+    public ResponseModel register( @RequestParam(value = "student_number") String schoolNumber,
                                    @RequestParam(value = "name") String name ,
                                    @RequestParam(value = "password") String password){
 
@@ -28,7 +28,7 @@ public class UserController {
 
     @RequestMapping("/login")
     @ResponseBody
-    public ResponseModel login( @RequestParam(value = "school_number") String schoolNumber,
+    public ResponseModel login( @RequestParam(value = "student_number") String schoolNumber,
                                 @RequestParam(value = "password") String password){
 
         return  userService.login(schoolNumber,password);
@@ -60,27 +60,27 @@ public class UserController {
         return userService.queryUserByNameOrSchoolNumber(key);
     }
 
-    @PutMapping("/ban")
+    @PutMapping("/ban/{id}")
     @ResponseBody
-    public ResponseModel banUser(@RequestParam("id") Integer id ){
+    public ResponseModel banUser(@PathVariable Integer id ){
         return userService.banUser(id);
     }
 
-    @PutMapping("/enable")
+    @PutMapping("/enable/{id}")
     @ResponseBody
-    public ResponseModel enableUser(@RequestParam("id") Integer id ){
+    public ResponseModel enableUser(@PathVariable Integer id ){
         return userService.enableUser(id);
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping("/delete/{id}")
     @ResponseBody
-    public ResponseModel deleteUser(@RequestParam("id") Integer id ){
+    public ResponseModel deleteUser(@PathVariable Integer id ){
         return userService.deleteUser(id);
     }
 
-    @PutMapping("/type")
+    @PutMapping("/type/{id}")
     @ResponseBody
-    public ResponseModel setUserType(@RequestParam("id") Integer id ,@RequestParam("type") Integer type ){
+    public ResponseModel setUserType(@PathVariable Integer id ,@RequestParam("type") Integer type ){
         return userService.setUserType(id,type);
     }
 }

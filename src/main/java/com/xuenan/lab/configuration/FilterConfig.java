@@ -15,10 +15,10 @@ public class FilterConfig {
         FilterRegistrationBean bean = new FilterRegistrationBean();
         bean.setFilter(new ManagerFilter());
         bean.addUrlPatterns("/user/all/*");
-        bean.addUrlPatterns("/user/ban");
-        bean.addUrlPatterns("/user/enable");
-        bean.addUrlPatterns("/user/delete");
-        bean.addUrlPatterns("/user/type");
+        bean.addUrlPatterns("/user/ban/*");
+        bean.addUrlPatterns("/user/enable/*");
+        bean.addUrlPatterns("/user/delete/*");
+        bean.addUrlPatterns("/user/type/*");
         bean.addUrlPatterns("/information/photo/delete/*");
         bean.addUrlPatterns("/information/photo/name/*");
         bean.addUrlPatterns("/information/photo/new");
@@ -56,7 +56,7 @@ public class FilterConfig {
         FilterRegistrationBean bean = new FilterRegistrationBean();
         bean.setFilter(new LoginFilter());
         bean.addUrlPatterns("/report/student/*");
-        bean.addUrlPatterns("/report/remove/*");
+        bean.addUrlPatterns("/report/delete/*");
         bean.addUrlPatterns("/report/new");
         bean.addUrlPatterns("/report/upload/*");
         return bean;
