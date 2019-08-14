@@ -5,6 +5,8 @@ import com.xuenan.lab.entity.User;
 import com.xuenan.lab.user_management.dao.UserDao;
 import com.xuenan.lab.user_management.service.LoginSessionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -12,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class TeacherFilter implements Filter {
+
     @Autowired
     private LoginSessionService loginSessionService ;
 
@@ -20,27 +23,30 @@ public class TeacherFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-
+        ServletContext context = filterConfig.getServletContext();
+        ApplicationContext ac = WebApplicationContextUtils.getWebApplicationContext(context);
+        loginSessionService = ac.getBean(LoginSessionService.class);
+        userDao = ac.getBean(UserDao.class);
     }
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
 
-        HttpServletRequest request = (HttpServletRequest) servletRequest ;
-        HttpServletResponse response = (HttpServletResponse) servletResponse ;
-        String token = request.getHeader("token") ;
-        if( token == null ){
-            request.getRequestDispatcher("/error/token/null").forward(request,response);
+        HttpServletRequest request = (HttpServletRequest) servletRequest;
+        HttpServletResponse response = (HttpServletResponse) servletResponse;
+        String token = request.getHeader("token");
+        if (token == null) {
+            request.getRequestDispatcher("/error/token/null").forward(request, response);
         } //如果在请求的Header中没有“token”字段，则返回错误代码
-        else{
+        else {
             LoginSession session = loginSessionService.queryValidLoginSessionByToken(token);
-            if( session == null ){
-                request.getRequestDispatcher("/error/token/invalid").forward(request,response);
-            } else{
-                User user = userDao.queryUserById(session.getId());
-                if( user.getValid() == 0 ){
-                    request.getRequestDispatcher("/error/token/invalid").forward(request,response);
-                }
+            if (session == null) {
+                request.getRequestDispatcher("/error/token/invalid").forward(request, response);
+            } else {
+                 User user = userDao.queryUserById(session.getUserId());
+                 if( user == null || user.getValid() == 0 ){
+                     request.getRequestDispatcher("/error/token/invalid").forward(request,response);
+                 }
                 else if( user.getType()<2){
                     request.getRequestDispatcher("/error/token/not_teacher").forward(request,response);
                 }else {
@@ -55,3 +61,4 @@ public class TeacherFilter implements Filter {
 
     }
 }
+

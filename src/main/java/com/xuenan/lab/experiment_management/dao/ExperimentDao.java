@@ -39,6 +39,9 @@ public interface ExperimentDao {
     @Select("SELECT * FROM experiment WHERE ID=#{id}")
     Experiment queryExperimentById(@Param("id") Integer id);
 
+    @Delete("DELETE FROM experiment WHERE ID=#{id}")
+    Integer deleteExperimentById(@Param("id") Integer id);
+
     @Update("UPDATE experiment SET CURRENT_STUDENT_NUMBER=#{currentStudentNumber} WHERE ID=#{id}")
     Integer setCurrentStudentNumber(@Param("currentStudentNumber") Integer number,@Param("id") Integer id);
 

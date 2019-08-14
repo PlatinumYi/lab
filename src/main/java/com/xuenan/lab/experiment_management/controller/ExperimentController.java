@@ -3,6 +3,7 @@ package com.xuenan.lab.experiment_management.controller;
 import com.xuenan.lab.experiment_management.model.ResponseModel;
 import com.xuenan.lab.experiment_management.service.ExperimentService;
 import com.xuenan.lab.user_management.service.LoginSessionService;
+import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
@@ -64,5 +65,13 @@ public class ExperimentController {
         String token = request.getHeader("token");
         Integer user_id = loginSessionService.queryValidLoginSessionByToken(token).getUserId();
         return experimentService.changeExperiment(user_id,id, name, instruction, teacherName, accessibleUntil, reportUntil, maxStudentNumber);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    @ResponseBody
+    public ResponseModel queryAccessibleExperiment(HttpServletRequest request, @PathVariable Integer id){
+        String token = request.getHeader("token");
+        Integer user_id = loginSessionService.queryValidLoginSessionByToken(token).getUserId();
+        return experimentService.deleteExperiment(user_id,id);
     }
 }

@@ -14,7 +14,7 @@ public interface HumanityInformationDao {
     @Select("SELECT * FROM humanity_information WHERE ID=#{id}")
     HumanityInformation queryHumanityInformationById(@Param("id") Integer id) ;
 
-    @Insert("INSERT INTO humanity_information(NAME,INTRODUCTION,PHOTO_SRC) VALUES(#{name}，#{introduction}，#{photoSrc})")
+    @Insert("INSERT INTO humanity_information(NAME,INTRODUCTION,PHOTO_SRC) VALUES(#{name},#{introduction},#{photoSrc})")
     Integer createHumanityInformation(@Param("name") String name,
                                       @Param("introduction") String introduction,
                                       @Param("photoSrc") String photoSrc );

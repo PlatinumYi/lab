@@ -23,6 +23,7 @@ public class LoginSesssionServiceImpl implements LoginSessionService {
             Long validUntil = session.getLoginTime().getTime() + (3600*1000*UserServiceImpl.SESSION_LIFE) ;
             Long current = new Date().getTime() + (3600*1000*8) ;
             if( current>validUntil ){
+                System.out.println("xxx");
                session = null ;
             }
         }

@@ -22,6 +22,10 @@ public class HumanityinformationServiceImpl implements HumanityInformationServic
     //图片文件最大不能高于5M
     private static final long MAX_PHOTO_SIZE = 5*1024*1024 ;
 
+    private static final String LOCAL_STORAGE ="E:/SpringBootProjectResources/Lab" ;
+
+    private static final String MODULE_URL = "/picture/teacher/";
+
     @Override
     public ResponseModel queryHumanityInformation() {
 
@@ -49,22 +53,23 @@ public class HumanityinformationServiceImpl implements HumanityInformationServic
         else if( file.getSize() > MAX_PHOTO_SIZE ){
             return new ResponseModel(1003,"照片文件过大");
         }
-        String src = "/picture/teacher/" ;
+
+
         String fileName = file.getOriginalFilename() ;
 
 
         String suffix = fileName.substring(fileName.lastIndexOf(".")+1);
-        if( !suffix.equals("jpg") || !suffix.equals("png") ){
+        if( !suffix.equals("jpg") && !suffix.equals("png") ){
             model = new ResponseModel(1004,"非法的文件后缀名");
         }else {
 
             Date date = new Date();
             String currentMills = String.valueOf(date.getTime());
-            fileName = currentMills+suffix ; //根据当前毫秒数命名文件，防止重名
+            fileName = currentMills+"."+suffix ; //根据当前毫秒数命名文件，防止重名
             try {
-                File targetFile = new File(src+fileName);
+                File targetFile = new File(LOCAL_STORAGE+MODULE_URL+fileName);
                 file.transferTo(targetFile);
-                humanityInformationDao.createHumanityInformation(name,introduction,src+fileName);
+                humanityInformationDao.createHumanityInformation(name,introduction,MODULE_URL+fileName);
                 model = new ResponseModel() ;
             }catch (IOException e){
                 model = new ResponseModel(1005,"文件存储失败");
@@ -85,6 +90,8 @@ public class HumanityinformationServiceImpl implements HumanityInformationServic
             Integer result = humanityInformationDao.removeHumanityInformation(id);
             if( result>0 ){
                 model = new ResponseModel();
+                File file = new File(LOCAL_STORAGE+information.getPhotoSrc());
+                file.delete();
             }else {
                 model = new ResponseModel(1007,"信息删除失败");
             }

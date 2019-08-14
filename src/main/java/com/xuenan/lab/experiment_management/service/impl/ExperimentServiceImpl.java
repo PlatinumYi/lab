@@ -2,6 +2,7 @@ package com.xuenan.lab.experiment_management.service.impl;
 
 import com.xuenan.lab.entity.Experiment;
 import com.xuenan.lab.experiment_management.dao.ExperimentDao;
+import com.xuenan.lab.experiment_management.dao.ReportDao;
 import com.xuenan.lab.experiment_management.model.ResponseModel;
 import com.xuenan.lab.experiment_management.service.ExperimentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,9 @@ public class ExperimentServiceImpl implements ExperimentService {
 
     @Autowired
     private ExperimentDao experimentDao ;
+
+    @Autowired
+    private ReportDao reportDao ;
 
     @Override
     public ResponseModel createExperiment(String name, String instruction, Integer starterId, String teacherName, Date accessibleUntil, Date reportUntil, Integer maxStudentNumber) {
@@ -37,8 +41,10 @@ public class ExperimentServiceImpl implements ExperimentService {
         Experiment experiment = experimentDao.queryExperimentById(id);
         if( accessibleUntil.after(reportUntil)){
             model = new ResponseModel(4001,"完结时间不能早于报名截止时间");
-        }else if( experiment == null ){
+        } else if( experiment == null ){
             model = new ResponseModel(4003,"目标实验不存在");
+        } else if( experiment.getAccessibleUntil().before(new Date())) {
+            model = new ResponseModel(4007,"不能修改已经可以提交报告的实验");
         } else if( maxStudentNumber<experiment.getCurrentStudentNumber()) {
             model = new ResponseModel(4004,"不能设定最大容量小于已选课人数");
         } else if( user_id != experiment.getStarterId()){
@@ -60,6 +66,29 @@ public class ExperimentServiceImpl implements ExperimentService {
         List<Experiment> experiments = experimentDao.queryExperimentByStarterId(id);
         ResponseModel model = new ResponseModel();
         model.setData(experiments);
+        return model ;
+    }
+
+    @Override
+    public ResponseModel deleteExperiment(Integer user_id ,Integer id) {
+
+        ResponseModel model ;
+        Experiment experiment = experimentDao.queryExperimentById(id);
+        if( experiment == null ){
+            model = new ResponseModel(4003,"目标实验不存在");
+        } else if( experiment.getAccessibleUntil().before(new Date())) {
+                model = new ResponseModel(4007,"不能取消已经可以提交报告的实验");
+        } else if( user_id != experiment.getStarterId()){
+            model = new ResponseModel(4008,"不能取消非本人发起的实验");
+        }else {
+            Integer result = experimentDao.deleteExperimentById(id);
+            if(result == 0){
+                model = new ResponseModel(4009,"删除实验失败");
+            }else {
+                reportDao.removeReportByExperimentId(id);
+                model = new ResponseModel();
+            }
+        }
         return model ;
     }
 

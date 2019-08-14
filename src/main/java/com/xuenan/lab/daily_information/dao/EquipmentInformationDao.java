@@ -27,7 +27,7 @@ public interface EquipmentInformationDao {
     Integer removeEquipment(@Param("id") Integer id);
 
     @Insert("INSERT INTO equipment_information(NAME,INTRODUCTION,DANGEROUS,PHOTO_SRC) VALUES (#{name},#{introduction},#{dangerous},#{photoSrc})")
-    Insert createEquipment(@Param("name") String name,
+    Integer createEquipment(@Param("name") String name,
                            @Param("introduction") String introduction,
                            @Param("dangerous") Integer dangerous,
                            @Param("photoSrc") String photoSrc);

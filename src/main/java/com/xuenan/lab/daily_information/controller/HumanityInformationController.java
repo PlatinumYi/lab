@@ -27,7 +27,7 @@ public class HumanityInformationController {
         return  humanityInformationService.createHumanityInformation(photo,name,introduction);
     }
 
-    @Delete("/remove/{id}")
+    @DeleteMapping("/delete/{id}")
     @ResponseBody
     public ResponseModel delete(@PathVariable Integer id){
         return  humanityInformationService.removeHumanityInformation(id);

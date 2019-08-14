@@ -47,7 +47,7 @@ public class EquipmentInformationController {
 
     @PostMapping("/new")
     @ResponseBody
-    public ResponseModel create(@RequestParam("photo")MultipartFile file,
+    public ResponseModel create(@RequestParam("photo") MultipartFile file,
                                 @RequestParam("name") String name,
                                 @RequestParam("introduction") String introduction,
                                 @RequestParam("dangerous") Integer dangerous)

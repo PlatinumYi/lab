@@ -2,6 +2,7 @@ package com.xuenan.lab.experiment_management.dao;
 
 import com.xuenan.lab.entity.Report;
 import org.apache.ibatis.annotations.*;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -16,6 +17,9 @@ public interface ReportDao {
 
     @Update("UPDATE report SET MARK=#{mark},IS_MARKED=1 WHERE ID=#{id}")
     Integer markReport(@Param("id") Integer id,@Param("mark") Integer mark);
+
+    @Select("SELECT COUNT(*) FROM report WHERE STUDENT_ID=#{studentId} AND EXPERIMENT_ID=#{experimentId}")
+    Integer checkSelectedStudent(@Param("studentId") Integer sid , @Param("experimentId") Integer eid);
 
     @Select("SELECT * FROM report WHERE STUDENT_ID=#{id}")
     @Results( id="reportMap" , value = {
@@ -41,4 +45,7 @@ public interface ReportDao {
 
     @Delete("DELETE FROM report WHERE ID=#{id}")
     Integer removeReportById(@Param("id") Integer id);
+
+    @Delete("DELETE FROM report WHERE EXPERIMENT_ID=#{id}")
+    Integer removeReportByExperimentId(@Param("id") Integer id);
 }

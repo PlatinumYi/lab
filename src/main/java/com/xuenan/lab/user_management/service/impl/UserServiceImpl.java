@@ -139,7 +139,7 @@ public class UserServiceImpl implements UserService {
         if( user == null ){
             model = new ResponseModel(2007,"目标用户不存在");
         }else if( user.getType()  == 3 ){
-            model = new ResponseModel(2008,"不能禁用管理员");
+            model = new ResponseModel(2008,"不能操作管理员");
         }else if( user.getValid() == 0 ){
             model = new ResponseModel(2009,"用户已经被禁用了");
         }else {
@@ -159,6 +159,8 @@ public class UserServiceImpl implements UserService {
         User user = userDao.queryUserById(id) ;
         if( user == null ){
             model = new ResponseModel(2007,"目标用户不存在");
+        }else if( user.getType()  == 3 ){
+            model = new ResponseModel(2008,"不能操作管理员");
         }else if( user.getValid() == 1 ){
             model = new ResponseModel(2011,"用户已经处于可使用状态");
         }else {
@@ -180,7 +182,9 @@ public class UserServiceImpl implements UserService {
         User user = userDao.queryUserById(id) ;
         if( user == null ){
             model = new ResponseModel(2007,"目标用户不存在");
-        }else if( type<1 || type > 3){
+        }else if( user.getType()  == 3 ){
+            model = new ResponseModel(2008,"不能操作管理员");
+        } else if( type<1 || type > 3){
             model = new ResponseModel(2013,"修改类型非法");
         }else {
             Integer result = userDao.setUserType(type,id);
@@ -200,6 +204,8 @@ public class UserServiceImpl implements UserService {
         User user = userDao.queryUserById(id) ;
         if( user == null ){
             model = new ResponseModel(2007,"目标用户不存在");
+        }else if( user.getType()  == 3 ){
+            model = new ResponseModel(2008,"不能操作管理员");
         }else {
             Integer result = userDao.removeUserById(id);
             if( result>0 ){

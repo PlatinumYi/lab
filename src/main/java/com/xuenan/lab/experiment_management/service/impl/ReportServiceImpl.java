@@ -33,6 +33,9 @@ public class ReportServiceImpl implements ReportService {
 
     private static final long MAX_REPORT_SIZE = 1024*1024*10;
 
+    private static final String LOCAL_STORAGE ="E:/SpringBootProjectResources/Lab" ;
+
+    private static final String MODULE_URL = "/experiment/homework/" ;
     @Override
     @Transactional
     public ResponseModel createReport(Integer userId,Integer experimentId) {
@@ -48,7 +51,10 @@ public class ReportServiceImpl implements ReportService {
             model = new ResponseModel(5002,"用户不存在");
         }else if( experiment.getAccessibleUntil().before(new Date())){
             model = new ResponseModel(5003,"实验报名已经截止");
-        }else {
+        }else if( reportDao.checkSelectedStudent(userId,experimentId) > 0 ){
+            model = new ResponseModel(5015,"不允许重复选课");
+        } else {
+
             Integer result = reportDao.createReport(experimentId,userId);
             if( result == 0 ){
                 model = new ResponseModel(5004,"添加实验失败");
@@ -61,14 +67,10 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
-    public ResponseModel queryReportByStudentId(Integer currentUser,Integer id) {
+    public ResponseModel queryReportByStudentId(Integer currentUser) {
 
         ResponseModel model = new ResponseModel();
-        if( !currentUser.equals(id)){
-            model = new ResponseModel(5014,"用户不是实验的预约者或发起者");
-            return model ;
-        }
-        List<Report> reports = reportDao.queryReportByStudentId(id);
+        List<Report> reports = reportDao.queryReportByStudentId(currentUser);
         model.setData(reports);
         return model ;
     }
@@ -98,7 +100,7 @@ public class ReportServiceImpl implements ReportService {
         else if( file.getSize() > MAX_REPORT_SIZE ){
             return new ResponseModel(5006,"报告文件过大");
         }
-        String src = "/experiment/homework/" ;
+
         String fileName = file.getOriginalFilename() ;
 
 
@@ -113,12 +115,15 @@ public class ReportServiceImpl implements ReportService {
             return model ;
         }
 
-        fileName = user.getSchoolNumber().toString()+"_"+experiment.getId()+"_"+experiment.getName()+suffix ;
+        fileName = user.getSchoolNumber().toString()+"_"+experiment.getId()+"_"+experiment.getName()+"."+suffix ;
         //根据学号，实验内容上传文档防止重名
         try {
-                File targetFile = new File(src+fileName);
+                File targetFile = new File(LOCAL_STORAGE+MODULE_URL+fileName);
+                if(targetFile.exists()){
+                    targetFile.delete();
+                }
                 file.transferTo(targetFile);
-                reportDao.changeFileSrc(reportId,src+fileName);
+                reportDao.changeFileSrc(reportId,MODULE_URL+fileName);
                 model = new ResponseModel() ;
             }catch (IOException e){
                 model = new ResponseModel(5007,"报告存储失败");
@@ -135,7 +140,7 @@ public class ReportServiceImpl implements ReportService {
         Report report = reportDao.queryReportById(id);
         if( report==null ){
             model = new ResponseModel(5008, "报告不存在");
-        } else if( currentUser.equals(report.getStudent().getId())){
+        } else if( !currentUser.equals(report.getStudent().getId())){
             model = new ResponseModel(5014,"用户不是实验的预约者或发起者");
         }else {
             Experiment experiment = report.getExperiment();
@@ -147,6 +152,10 @@ public class ReportServiceImpl implements ReportService {
                 if (result == 0) {
                     model = new ResponseModel(5010, "取消预约实验失败");
                 } else {
+                    if( report.getReportFileSrc()!=null){
+                        File file = new File(LOCAL_STORAGE+report.getReportFileSrc());
+                        file.delete() ;
+                    }
                     model = new ResponseModel();
                 }
             }
@@ -161,7 +170,7 @@ public class ReportServiceImpl implements ReportService {
         Report report = reportDao.queryReportById(id);
         if( report==null ){
             model = new ResponseModel(5008, "报告不存在");
-        }else if( currentUser.equals(report.getExperiment().getStarterId())){
+        }else if( !currentUser.equals(report.getExperiment().getStarterId())){
             model = new ResponseModel(5014,"用户不是实验的预约者或发起者");
         }else {
             Experiment experiment = report.getExperiment();

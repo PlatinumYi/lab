@@ -8,6 +8,8 @@ import com.xuenan.lab.user_management.service.LoginSessionService;
 import com.xuenan.lab.user_management.service.UserService;
 import com.xuenan.lab.user_management.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -28,7 +30,10 @@ public class LoginFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-
+        ServletContext context = filterConfig.getServletContext();
+        ApplicationContext ac = WebApplicationContextUtils.getWebApplicationContext(context);
+        loginSessionService = ac.getBean(LoginSessionService.class);
+        userDao = ac.getBean(UserDao.class);
     }
 
     @Override
@@ -45,8 +50,8 @@ public class LoginFilter implements Filter {
             if( session == null ){
                 request.getRequestDispatcher("/error/token/invalid").forward(request,response);
             } else{
-                User user = userDao.queryUserById(session.getId());
-                if( user.getValid() == 0 ){
+                User user = userDao.queryUserById(session.getUserId());
+                if( user == null || user.getValid() == 0 ){
                     request.getRequestDispatcher("/error/token/invalid").forward(request,response);
                 }else {
                     filterChain.doFilter(request,response);

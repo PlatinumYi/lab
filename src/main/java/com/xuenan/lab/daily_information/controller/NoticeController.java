@@ -34,9 +34,9 @@ public class NoticeController {
 
     @PostMapping("/new")
     @ResponseBody
-    public ResponseModel createNotice(@RequestParam("title") String title,
-                                          @RequestParam("content") String content,
-                                          @RequestParam("authorName") String authorName){
+    public ResponseModel createNotice( @RequestParam("title") String title,
+                                       @RequestParam("content") String content,
+                                       @RequestParam("author_name") String authorName ){
         return noticeService.createNotice(title,content,authorName);
     }
 
@@ -58,7 +58,7 @@ public class NoticeController {
     public ResponseModel updateNotice( @PathVariable Integer id,
                                        @RequestParam("title") String title,
                                        @RequestParam("content") String content,
-                                       @RequestParam("authorName") String authorName){
+                                       @RequestParam("author_name") String authorName){
         return noticeService.updateNotice(id,title,content,authorName);
     }
 

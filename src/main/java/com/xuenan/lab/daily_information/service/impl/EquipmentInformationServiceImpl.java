@@ -22,11 +22,15 @@ public class EquipmentInformationServiceImpl implements EquipmentInformationServ
     //图片文件最大不能高于5M
     private static final long MAX_PHOTO_SIZE = 5*1024*1024 ;
 
+    private static final String LOCAL_STORAGE ="E:/SpringBootProjectResources/Lab" ;
+
+    private static final String MODULE_URL = "/picture/equipment/";
+
     @Override
     public ResponseModel queryValidEquipmentInformation() {
 
         ResponseModel responseModel ;
-        List<EquipmentInformation> information = equipmentInformationDao.queryInvalidEquipment();
+        List<EquipmentInformation> information = equipmentInformationDao.queryValidEquipment();
         if( information != null ){
             responseModel = new ResponseModel();
             responseModel.setData(information);
@@ -102,6 +106,7 @@ public class EquipmentInformationServiceImpl implements EquipmentInformationServ
             responseModel = new ResponseModel(1208,"被删除的设备不能处于可用状态");
         }else {
             Integer result = equipmentInformationDao.removeEquipment(id);
+            File file = new File(LOCAL_STORAGE+information.getPhotoSrc());
             if( result>0){
                 responseModel = new ResponseModel();
             }else {
@@ -121,22 +126,23 @@ public class EquipmentInformationServiceImpl implements EquipmentInformationServ
         else if( file.getSize() > MAX_PHOTO_SIZE ){
             return new ResponseModel(1211,"照片文件过大");
         }
-        String src = "/picture/equipment/" ;
+
+
         String fileName = file.getOriginalFilename() ;
 
 
         String suffix = fileName.substring(fileName.lastIndexOf(".")+1);
-        if( !suffix.equals("jpg") || !suffix.equals("png") ){
+        if( !suffix.equals("jpg") && !suffix.equals("png") ){
             model = new ResponseModel(1212,"非法的文件后缀名");
         }else {
 
             Date date = new Date();
             String currentMills = String.valueOf(date.getTime());
-            fileName = currentMills+suffix ; //根据当前毫秒数命名文件，防止重名
+            fileName = currentMills+"."+suffix ; //根据当前毫秒数命名文件，防止重名
             try {
-                File targetFile = new File(src+fileName);
+                File targetFile = new File(LOCAL_STORAGE+MODULE_URL+fileName);
                 file.transferTo(targetFile);
-                equipmentInformationDao.createEquipment(name,introduction,dangerous,src+fileName);
+                equipmentInformationDao.createEquipment(name,introduction,dangerous,MODULE_URL+fileName);
                 model = new ResponseModel() ;
             }catch (IOException e){
                 model = new ResponseModel(1213,"文件存储失败");
