@@ -22,7 +22,7 @@ public class HumanityinformationServiceImpl implements HumanityInformationServic
     //图片文件最大不能高于5M
     private static final long MAX_PHOTO_SIZE = 5*1024*1024 ;
 
-    private static final String LOCAL_STORAGE ="E:/SpringBootProjectResources/Lab" ;
+    private static final String LOCAL_STORAGE ="/root/LabFiles" ;
 
     private static final String MODULE_URL = "/picture/teacher/";
 

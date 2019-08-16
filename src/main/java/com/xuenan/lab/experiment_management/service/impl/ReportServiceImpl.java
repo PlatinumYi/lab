@@ -33,7 +33,7 @@ public class ReportServiceImpl implements ReportService {
 
     private static final long MAX_REPORT_SIZE = 1024*1024*10;
 
-    private static final String LOCAL_STORAGE ="E:/SpringBootProjectResources/Lab" ;
+    private static final String LOCAL_STORAGE ="/root/LabFiles" ;
 
     private static final String MODULE_URL = "/experiment/homework/" ;
     @Override
