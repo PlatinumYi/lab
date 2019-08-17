@@ -49,6 +49,7 @@ public class FilterConfig {
         bean.addUrlPatterns("/experiment/start/*");
         bean.addUrlPatterns("/report/experiment/*");
         bean.addUrlPatterns("/report/mark/*");
+        bean.addUrlPatterns("/report/help/sign/*");
         return bean;
     }
 
@@ -60,6 +61,7 @@ public class FilterConfig {
         bean.addUrlPatterns("/report/delete/*");
         bean.addUrlPatterns("/report/new");
         bean.addUrlPatterns("/report/upload/*");
+        bean.addUrlPatterns("/report/sign/*");
         return bean;
     }
 }
