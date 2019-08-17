@@ -26,7 +26,7 @@ public class ExperimentController {
     @ResponseBody
     public ResponseModel querySelfExperiment(HttpServletRequest request){
         String token = request.getHeader("token");
-        Integer id = loginSessionService.queryValidLoginSessionByToken(token).getUserId();
+        Integer id = loginSessionService.queryValidLoginSessionByToken(token).getUser().getId();
         return experimentService.querySelfExperiment(id);
     }
 
@@ -47,7 +47,7 @@ public class ExperimentController {
             @RequestParam("report_until") @DateTimeFormat(pattern ="yyyy-MM-dd") Date reportUntil,
             @RequestParam("max_student_number") Integer maxStudentNumber){
         String token = request.getHeader("token");
-        Integer id = loginSessionService.queryValidLoginSessionByToken(token).getUserId();
+        Integer id = loginSessionService.queryValidLoginSessionByToken(token).getUser().getId();
         return experimentService.createExperiment(name,instruction,id,teacherName,accessibleUntil,reportUntil,maxStudentNumber);
     }
 
@@ -63,7 +63,7 @@ public class ExperimentController {
             @RequestParam("report_until") @DateTimeFormat(pattern ="yyyy-MM-dd") Date reportUntil,
             @RequestParam("max_student_number") Integer maxStudentNumber){
         String token = request.getHeader("token");
-        Integer user_id = loginSessionService.queryValidLoginSessionByToken(token).getUserId();
+        Integer user_id = loginSessionService.queryValidLoginSessionByToken(token).getUser().getId();
         return experimentService.changeExperiment(user_id,id, name, instruction, teacherName, accessibleUntil, reportUntil, maxStudentNumber);
     }
 
@@ -71,7 +71,7 @@ public class ExperimentController {
     @ResponseBody
     public ResponseModel queryAccessibleExperiment(HttpServletRequest request, @PathVariable Integer id){
         String token = request.getHeader("token");
-        Integer user_id = loginSessionService.queryValidLoginSessionByToken(token).getUserId();
+        Integer user_id = loginSessionService.queryValidLoginSessionByToken(token).getUser().getId();
         return experimentService.deleteExperiment(user_id,id);
     }
 }

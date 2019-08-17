@@ -28,7 +28,7 @@ public class ReportController {
     public ResponseModel queryReportByExperimentId(HttpServletRequest request, @PathVariable Integer id){
         String token = request.getHeader("token");
         LoginSession currentUser = loginSessionService.queryValidLoginSessionByToken(token);
-        return reportService.queryReportByExperimentId(currentUser.getUserId(),id);
+        return reportService.queryReportByExperimentId(currentUser.getUser().getId(),id);
     }
 
     @GetMapping("/self")
@@ -36,7 +36,7 @@ public class ReportController {
     public ResponseModel queryReportByStudentId(HttpServletRequest request){
         String token = request.getHeader("token");
         LoginSession currentUser = loginSessionService.queryValidLoginSessionByToken(token);
-        return reportService.queryReportByStudentId(currentUser.getUserId());
+        return reportService.queryReportByStudentId(currentUser.getUser().getId());
     }
 
     @PostMapping("/new")
@@ -44,7 +44,7 @@ public class ReportController {
     public ResponseModel createReport(HttpServletRequest request,@RequestParam("experiment_id") Integer experimentId){
         String token = request.getHeader("token");
         LoginSession currentUser = loginSessionService.queryValidLoginSessionByToken(token);
-        return reportService.createReport(currentUser.getUserId(),experimentId);
+        return reportService.createReport(currentUser.getUser().getId(),experimentId);
     }
 
     @DeleteMapping("/delete/{id}")
@@ -52,7 +52,7 @@ public class ReportController {
     public ResponseModel removeReport(HttpServletRequest request,@PathVariable Integer id){
         String token = request.getHeader("token");
         LoginSession currentUser = loginSessionService.queryValidLoginSessionByToken(token);
-        return reportService.removeReport(currentUser.getUserId(),id);
+        return reportService.removeReport(currentUser.getUser().getId(),id);
     }
 
     @PutMapping("/upload/{id}")
@@ -62,7 +62,7 @@ public class ReportController {
                                       @PathVariable Integer id){
         String token = request.getHeader("token");
         LoginSession currentUser = loginSessionService.queryValidLoginSessionByToken(token);
-        return reportService.changeReportFile(currentUser.getUserId(),file,id);
+        return reportService.changeReportFile(currentUser.getUser().getId(),file,id);
     }
 
     @PutMapping("/mark/{id}")
@@ -72,6 +72,6 @@ public class ReportController {
                                       @RequestParam("mark") Integer mark){
         String token = request.getHeader("token");
         LoginSession currentUser = loginSessionService.queryValidLoginSessionByToken(token);
-        return reportService.markReport(currentUser.getUserId(),id,mark);
+        return reportService.markReport(currentUser.getUser().getId(),id,mark);
     }
 }

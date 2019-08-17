@@ -51,7 +51,7 @@ public class LoginFilter implements Filter {
             if( session == null ){
                 request.getRequestDispatcher("/error/token/invalid").forward(request,response);
             } else{
-                User user = userDao.queryUserById(session.getUserId());
+                User user = userDao.queryUserById(session.getUser().getId());
                 if( user == null || user.getValid() == 0 ){
                     request.getRequestDispatcher("/error/token/invalid").forward(request,response);
                 }else {
