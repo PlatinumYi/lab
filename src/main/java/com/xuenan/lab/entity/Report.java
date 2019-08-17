@@ -16,6 +16,7 @@ public class Report {
     private Integer id ;
     private Experiment experiment ;
     private User student ;
+    private Integer isSigned;
     private Integer isMarked ;
     private Integer mark ;
     private String reportFileSrc ;
@@ -66,5 +67,13 @@ public class Report {
 
     public void setReportFileSrc(String reportFileSrc) {
         this.reportFileSrc = reportFileSrc;
+    }
+
+    public Integer getIsSigned() {
+        return isSigned;
+    }
+
+    public void setIsSigned(Integer isSigned) {
+        this.isSigned = isSigned;
     }
 }

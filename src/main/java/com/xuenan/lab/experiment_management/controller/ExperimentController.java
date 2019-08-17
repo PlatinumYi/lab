@@ -67,6 +67,18 @@ public class ExperimentController {
         return experimentService.changeExperiment(user_id,id, name, instruction, teacherName, accessibleUntil, reportUntil, maxStudentNumber);
     }
 
+    @PutMapping("/start/{id}")
+    @ResponseBody
+    public ResponseModel startExperimentSignIn(
+            HttpServletRequest request,
+            @PathVariable Integer id,
+            @RequestParam("longitude") Double longitude,
+            @RequestParam("latitude") Double latitude){
+        String token = request.getHeader("token");
+        Integer user_id = loginSessionService.queryValidLoginSessionByToken(token).getUser().getId();
+        return experimentService.startSignIn(user_id,id,longitude,latitude);
+    }
+
     @DeleteMapping("/delete/{id}")
     @ResponseBody
     public ResponseModel queryAccessibleExperiment(HttpServletRequest request, @PathVariable Integer id){

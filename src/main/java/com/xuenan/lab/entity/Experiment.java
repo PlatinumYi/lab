@@ -27,6 +27,9 @@ public class Experiment {
     private Date reportUntil ;
     private Integer maxStudentNumber ;
     private Integer currentStudentNumber ;
+    private Integer startSignIn ;
+    private Double longitude;
+    private Double latitude ;
 
     public Integer getId() {
         return id;
@@ -98,5 +101,29 @@ public class Experiment {
 
     public void setCurrentStudentNumber(Integer currentStudentNumber) {
         this.currentStudentNumber = currentStudentNumber;
+    }
+
+    public Integer getStartSignIn() {
+        return startSignIn;
+    }
+
+    public void setStartSignIn(Integer startSignIn) {
+        this.startSignIn = startSignIn;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
     }
 }

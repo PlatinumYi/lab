@@ -45,4 +45,6 @@ public interface ExperimentDao {
     @Update("UPDATE experiment SET CURRENT_STUDENT_NUMBER=#{currentStudentNumber} WHERE ID=#{id}")
     Integer setCurrentStudentNumber(@Param("currentStudentNumber") Integer number,@Param("id") Integer id);
 
+    @Update("UPDATE experiment SET LONGITUDE=#{longitude},LATITUDE=#{latitude},START_SIGN_IN=1 WHERE ID=#{id}")
+    Integer startSignIn(@Param("id") Integer id , @Param("longitude") Double longitude , @Param("latitude") Double latitude );
 }

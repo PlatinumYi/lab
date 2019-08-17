@@ -104,4 +104,27 @@ public class ExperimentServiceImpl implements ExperimentService {
         model.setData(experiments);
         return model ;
     }
+
+    @Override
+    public ResponseModel startSignIn(Integer user_id, Integer id, Double longitude, Double latitude) {
+
+        ResponseModel model ;
+        Experiment experiment = experimentDao.queryExperimentById(id);
+        if( experiment == null ){
+            model = new ResponseModel(4003,"目标实验不存在");
+        } else if( experiment.getStartSignIn() == 1){
+            model = new ResponseModel(4010,"实验签到已经开始");
+        }else if( user_id != experiment.getStarterId()){
+            model = new ResponseModel(4011,"不能开始非本人发起的实验的签到");
+        }else {
+            Integer result = experimentDao.startSignIn(id,longitude,latitude);
+            if(result == 0){
+                model = new ResponseModel(4012,"实验签到开始失败");
+            }else {
+                reportDao.removeReportByExperimentId(id);
+                model = new ResponseModel();
+            }
+        }
+        return model ;
+    }
 }

@@ -11,4 +11,5 @@ public interface ExperimentService {
     ResponseModel querySelfExperiment(Integer id);
     ResponseModel deleteExperiment(Integer user_id,Integer id);
     ResponseModel queryAccessibleExperiment();
+    ResponseModel startSignIn( Integer user_id , Integer id , Double longitude , Double latitude );
 }

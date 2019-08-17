@@ -46,6 +46,7 @@ public class FilterConfig {
         bean.addUrlPatterns("/experiment/self");
         bean.addUrlPatterns("/experiment/new");
         bean.addUrlPatterns("/experiment/update/*");
+        bean.addUrlPatterns("/experiment/start/*");
         bean.addUrlPatterns("/report/experiment/*");
         bean.addUrlPatterns("/report/mark/*");
         return bean;
