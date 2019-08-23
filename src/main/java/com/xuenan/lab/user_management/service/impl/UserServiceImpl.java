@@ -114,6 +114,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public ResponseModel currentUser(String token) {
+
+        ResponseModel model ;
+
+        LoginSession loginSession = loginSessionDao.queryLoginSessionByKey(token);
+        if( loginSession == null ){
+            model = new ResponseModel(2007,"目标用户不存在");
+        }else {
+            model = new ResponseModel();
+            model.setData(loginSession.getUser());
+        }
+        return model;
+    }
+
+    @Override
     public ResponseModel queryallValid() {
 
         List<User> users = userDao.queryValidUsers() ;

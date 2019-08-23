@@ -17,7 +17,7 @@ public class UserController {
     @Autowired
     private UserService userService ;
 
-    @RequestMapping("/register")
+    @PostMapping("/register")
     @ResponseBody
     public ResponseModel register( @RequestParam(value = "student_number") String schoolNumber,
                                    @RequestParam(value = "name") String name ,
@@ -26,7 +26,7 @@ public class UserController {
         return  userService.register(schoolNumber, name, password) ;
     }
 
-    @RequestMapping("/login")
+    @PostMapping("/login")
     @ResponseBody
     public ResponseModel login( @RequestParam(value = "student_number") String schoolNumber,
                                 @RequestParam(value = "password") String password){
@@ -34,12 +34,20 @@ public class UserController {
         return  userService.login(schoolNumber,password);
     }
 
-    @RequestMapping("/logout")
+    @PostMapping("/logout")
     @ResponseBody
     public ResponseModel logout(HttpServletRequest request){
 
         String token = request.getHeader("token") ;
         return  userService.logout(token);
+    }
+
+    @PostMapping("/current")
+    @ResponseBody
+    public ResponseModel currentUser(HttpServletRequest request){
+
+        String token = request.getHeader("token") ;
+        return  userService.currentUser(token);
     }
 
     @GetMapping("/all/valid")
