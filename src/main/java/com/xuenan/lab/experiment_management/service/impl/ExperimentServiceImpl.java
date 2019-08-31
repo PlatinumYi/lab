@@ -5,9 +5,13 @@ import com.xuenan.lab.experiment_management.dao.ExperimentDao;
 import com.xuenan.lab.experiment_management.dao.ReportDao;
 import com.xuenan.lab.experiment_management.model.ResponseModel;
 import com.xuenan.lab.experiment_management.service.ExperimentService;
+import com.xuenan.lab.tool.BeijingTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -20,13 +24,19 @@ public class ExperimentServiceImpl implements ExperimentService {
     @Autowired
     private ReportDao reportDao ;
 
+    private static final long MAX_GUIDE_BOOK_SIZE = 1024*1024*20;
+
+    private static final String LOCAL_STORAGE ="/root/LabFiles" ;
+
+    private static final String MODULE_URL = "/experiment/book/" ;
+
     @Override
-    public ResponseModel createExperiment(String name, String instruction, Integer starterId, String teacherName, Date accessibleUntil, Date reportUntil, Integer maxStudentNumber) {
+    public ResponseModel createExperiment(String name, String instruction, Integer starterId, String teacherName, Date accessibleUntil, Date reportUntil, Integer maxStudentNumber,Integer beginTime,Integer stopTime) {
 
         ResponseModel model ;
-        if( accessibleUntil.after(reportUntil)){
+        if( accessibleUntil.after(reportUntil) || stopTime<=beginTime ){
             model = new ResponseModel(4001,"完结时间不能早于报名截止时间");
-        }else if( experimentDao.createExperiment(name, instruction, starterId, teacherName, accessibleUntil, reportUntil, maxStudentNumber) == 0 ){
+        }else if( experimentDao.createExperiment(name, instruction, starterId, teacherName, BeijingTime.getBeijingTime(accessibleUntil), BeijingTime.getBeijingTime(reportUntil), maxStudentNumber,beginTime,stopTime) == 0 ){
             model = new ResponseModel(4002,"创建实验失败");
         }else{
             model = new ResponseModel();
@@ -35,11 +45,11 @@ public class ExperimentServiceImpl implements ExperimentService {
     }
 
     @Override
-    public ResponseModel changeExperiment(Integer user_id ,Integer id, String name, String instruction,String teacherName, Date accessibleUntil, Date reportUntil, Integer maxStudentNumber) {
+    public ResponseModel changeExperiment(Integer user_id ,Integer id, String name, String instruction,String teacherName, Date accessibleUntil, Date reportUntil, Integer maxStudentNumber,Integer beginTime,Integer stopTime) {
 
         ResponseModel model ;
         Experiment experiment = experimentDao.queryExperimentById(id);
-        if( accessibleUntil.after(reportUntil)){
+        if( accessibleUntil.after(reportUntil)|| stopTime<=beginTime){
             model = new ResponseModel(4001,"完结时间不能早于报名截止时间");
         } else if( experiment == null ){
             model = new ResponseModel(4003,"目标实验不存在");
@@ -50,11 +60,47 @@ public class ExperimentServiceImpl implements ExperimentService {
         } else if( user_id != experiment.getStarterId()){
             model = new ResponseModel(4005,"不能设定非本人发起的实验");
         }else {
-            Integer result = experimentDao.changeExperiment(id, name, instruction, teacherName, accessibleUntil, reportUntil, maxStudentNumber);
+            Integer result = experimentDao.changeExperiment(id, name, instruction, teacherName,BeijingTime.getBeijingTime(accessibleUntil), BeijingTime.getBeijingTime(reportUntil), maxStudentNumber,beginTime,stopTime);
             if(result == 0){
                 model = new ResponseModel(4006,"修改实验失败");
             }else {
                 model = new ResponseModel();
+            }
+        }
+        return model ;
+    }
+
+    @Override
+    public ResponseModel changeExperimentBook(Integer user_id, Integer id, MultipartFile file) {
+        ResponseModel model ;
+        Experiment experiment = experimentDao.queryExperimentById(id);
+        if( experiment == null ){
+            model = new ResponseModel(4003,"目标实验不存在");
+        } else if( experiment.getAccessibleUntil().before(new Date())) {
+            model = new ResponseModel(4007,"不能修改已经可以提交报告的实验");
+        } else if( user_id != experiment.getStarterId()){
+            model = new ResponseModel(4005,"不能设定非本人发起的实验");
+        } if( file.isEmpty() ){
+            model = new ResponseModel(4013,"指导书上传失败");
+        } else if( file.getSize() > MAX_GUIDE_BOOK_SIZE ){
+            model = new ResponseModel(5006,"报告文件过大");
+        }else {
+
+            String fileName = file.getOriginalFilename() ;
+            String suffix = fileName.substring(fileName.lastIndexOf(".")+1);
+
+            fileName = experiment.getId()+"_"+experiment.getName()+"."+suffix ;
+            //根据学号，实验内容上传文档防止重名
+            try {
+                File targetFile = new File(LOCAL_STORAGE+MODULE_URL+fileName);
+                if(targetFile.exists()){
+                    targetFile.delete();
+                }
+                file.transferTo(targetFile);
+                experimentDao.changeExperimentBook(id,MODULE_URL+fileName);
+                model = new ResponseModel() ;
+            }catch (IOException e){
+                model = new ResponseModel(5007,"报告存储失败");
             }
         }
         return model ;
@@ -96,8 +142,7 @@ public class ExperimentServiceImpl implements ExperimentService {
     public ResponseModel queryAccessibleExperiment() {
 
         Date LondonToday = new Date();
-        Long BeijingMills = LondonToday.getTime() + 3600*1000*8 ;
-        Date BeijingToday = new Date(BeijingMills);
+        Date BeijingToday = BeijingTime.getBeijingTime(LondonToday);
 
         List<Experiment> experiments = experimentDao.queryAccessibleExperiment(BeijingToday);
         ResponseModel model = new ResponseModel();

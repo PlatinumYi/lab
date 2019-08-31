@@ -16,6 +16,8 @@ public class FilterConfig {
         bean.setFilter(new ManagerFilter());
         bean.addUrlPatterns("/user/all/*");
         bean.addUrlPatterns("/user/ban/*");
+        bean.addUrlPatterns("/user/register");
+        bean.addUrlPatterns("/user/multi/register");
         bean.addUrlPatterns("/user/enable/*");
         bean.addUrlPatterns("/user/delete/*");
         bean.addUrlPatterns("/user/type/*");

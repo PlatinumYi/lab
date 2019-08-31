@@ -203,8 +203,8 @@ public class ReportServiceImpl implements ReportService {
             Experiment experiment = report.getExperiment();
             if (experiment.getStartSignIn() == 0 ) {
                 model = new ResponseModel(5015, "实验签到未开始");
-            } else if(  Math.abs(experiment.getLatitude()-latitude)>0.005 || Math.abs(experiment.getLongitude()-longitude)>0.005 ){
-                model = new ResponseModel(5016, "实验签到必须在老师400M半径范围内");
+            } else if(  Math.abs(experiment.getLatitude()-latitude)>0.001 || Math.abs(experiment.getLongitude()-longitude)>0.001 ){
+                model = new ResponseModel(5016, "实验签到必须在老师80M半径范围内");
             } else {
                 Integer result = reportDao.signIn(id);
                 if (result == 0) {

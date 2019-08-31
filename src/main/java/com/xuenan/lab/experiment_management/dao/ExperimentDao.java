@@ -10,17 +10,19 @@ import java.util.List;
 public interface ExperimentDao {
 
 
-    @Insert("INSERT INTO experiment(NAME,INSTRUCTION,STARTER_ID,TEACHER_NAME,ACCESSIBLE_UNTIL,REPORT_UNTIL,MAX_STUDENT_NUMBER)" +
-            "VALUES(#{name},#{instruction},#{starterId},#{teacherName},#{accessibleUntil},#{reportUntil},#{maxStudentNumber})")
+    @Insert("INSERT INTO experiment(NAME,INSTRUCTION,STARTER_ID,TEACHER_NAME,ACCESSIBLE_UNTIL,REPORT_UNTIL,MAX_STUDENT_NUMBER,BEGIN_TIME,STOP_TIME)" +
+            "VALUES(#{name},#{instruction},#{starterId},#{teacherName},#{accessibleUntil},#{reportUntil},#{maxStudentNumber},#{beginTime},#{stopTime})")
     Integer createExperiment(@Param("name") String name,
                              @Param("instruction") String instruction,
                              @Param("starterId") Integer starterId ,
                              @Param("teacherName") String teacherName ,
                              @Param("accessibleUntil") Date accessibleUntil,
                              @Param("reportUntil") Date reportUntil,
-                             @Param("maxStudentNumber") Integer maxStudentNumber );
+                             @Param("maxStudentNumber") Integer maxStudentNumber,
+                             @Param("beginTime") Integer beginTime,
+                             @Param("stopTime") Integer stopTime);
 
-    @Update("UPDATE experiment SET NAME=#{name},INSTRUCTION=#{instruction},TEACHER_NAME=#{teacherName}," +
+    @Update("UPDATE experiment SET NAME=#{name},INSTRUCTION=#{instruction},TEACHER_NAME=#{teacherName},BEGIN_TIME={beginTime},STOP_TIME=#{stopTime}" +
             "ACCESSIBLE_UNTIL=#{accessibleUntil},REPORT_UNTIL=#{reportUntil},MAX_STUDENT_NUMBER=#{maxStudentNumber} WHERE ID=#{id}")
     Integer changeExperiment(@Param("id") Integer id,
                              @Param("name") String name,
@@ -28,7 +30,13 @@ public interface ExperimentDao {
                              @Param("teacherName") String teacherName ,
                              @Param("accessibleUntil") Date accessibleUntil,
                              @Param("reportUntil") Date reportUntil,
-                             @Param("maxStudentNumber") Integer maxStudentNumber );
+                             @Param("maxStudentNumber") Integer maxStudentNumber,
+                             @Param("beginTime") Integer beginTime,
+                             @Param("stopTime") Integer stopTime );
+
+    @Update("UPDATE experiment SET GUIDE_BOOK=#{guideBook} WHERE ID=#{id}")
+    Integer changeExperimentBook (@Param("id") Integer id,
+                                  @Param("guideBook") String guideBook);
 
     @Select("SELECT * FROM experiment WHERE STARTER_ID=#{id}")
     List<Experiment> queryExperimentByStarterId(@Param("id") Integer id);

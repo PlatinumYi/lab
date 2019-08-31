@@ -21,7 +21,7 @@ public class ResourceConfig implements WebMvcConfigurer {
          *  5. 教师照片
          *  6. 设备照片
          */
-        registry.addResourceHandler("/experiment/guide/**").addResourceLocations("/root/LabFiles/experiment/book/");
+        registry.addResourceHandler("/experiment/book/**").addResourceLocations("/root/LabFiles/experiment/book/");
         registry.addResourceHandler("/experiment/homework/**").addResourceLocations("/root/LabFiles/experiment/homework/");
         registry.addResourceHandler("/data/**").addResourceLocations("/root/LabFiles/data/");
         registry.addResourceHandler("/picture/lab/**").addResourceLocations("/root/LabFiles/picture/lab/");
