@@ -15,7 +15,7 @@ import java.util.Date;
 public class LoginSession {
 
     private Integer id ;
-    private Integer userId ;
+    private User user ;
     private String token ;
     private Date loginTime ;
 
@@ -44,11 +44,11 @@ public class LoginSession {
         this.token = token;
     }
 
-    public Integer getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 }

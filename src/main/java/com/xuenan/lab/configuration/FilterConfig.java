@@ -16,6 +16,8 @@ public class FilterConfig {
         bean.setFilter(new ManagerFilter());
         bean.addUrlPatterns("/user/all/*");
         bean.addUrlPatterns("/user/ban/*");
+        bean.addUrlPatterns("/user/register");
+        bean.addUrlPatterns("/user/multi/register");
         bean.addUrlPatterns("/user/enable/*");
         bean.addUrlPatterns("/user/delete/*");
         bean.addUrlPatterns("/user/type/*");
@@ -46,8 +48,10 @@ public class FilterConfig {
         bean.addUrlPatterns("/experiment/self");
         bean.addUrlPatterns("/experiment/new");
         bean.addUrlPatterns("/experiment/update/*");
+        bean.addUrlPatterns("/experiment/start/*");
         bean.addUrlPatterns("/report/experiment/*");
         bean.addUrlPatterns("/report/mark/*");
+        bean.addUrlPatterns("/report/help/sign/*");
         return bean;
     }
 
@@ -59,6 +63,7 @@ public class FilterConfig {
         bean.addUrlPatterns("/report/delete/*");
         bean.addUrlPatterns("/report/new");
         bean.addUrlPatterns("/report/upload/*");
+        bean.addUrlPatterns("/report/sign/*");
         return bean;
     }
 }

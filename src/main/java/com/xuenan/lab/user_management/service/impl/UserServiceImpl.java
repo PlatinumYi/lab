@@ -8,15 +8,22 @@ import com.xuenan.lab.user_management.dao.LoginSessionDao;
 import com.xuenan.lab.user_management.dao.UserDao;
 import com.xuenan.lab.user_management.model.ResponseModel;
 import com.xuenan.lab.user_management.service.UserService;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
 
 @Service
-public class UserServiceImpl implements UserService {
+ public class UserServiceImpl implements UserService {
 
 
     @Autowired
@@ -29,7 +36,7 @@ public class UserServiceImpl implements UserService {
     public static final int SESSION_LIFE = 24 ;
 
     @Override
-    public ResponseModel register(String schoolNumber, String name, String password) {
+    public ResponseModel register(String schoolNumber, String name, String password, String grade) {
 
         ResponseModel responseModel ;
         // 获取当前北京时间
@@ -43,7 +50,7 @@ public class UserServiceImpl implements UserService {
         if (userDao.checkSchoolNumberExist(schoolNumber)>0){
             responseModel = new ResponseModel(2001,"该学号已被注册") ;
         }else {
-            Integer result = userDao.register(schoolNumber,password,name,BeijingToday) ;
+            Integer result = userDao.register(schoolNumber,password,name,BeijingToday,grade) ;
             if( result == 1 ){
                 responseModel = new ResponseModel() ;
             }else {
@@ -51,6 +58,81 @@ public class UserServiceImpl implements UserService {
             }
         }
         return responseModel ;
+    }
+
+    @Override
+    public ResponseModel multiRegister(MultipartFile file) {
+
+        ResponseModel model = new ResponseModel();
+
+        // 获取当前北京时间
+        Date LondonToday = new Date() ;
+        Long currentMillsToday = LondonToday.getTime() + (long)(3600*1000*8) ;
+        Date BeijingToday = new Date(currentMillsToday);
+
+        Workbook wb ;
+        if( file == null ){
+            model = new ResponseModel(2016,"注册文件不存在");
+            return model;
+        }
+        String originalName = file.getOriginalFilename();
+        try {
+           InputStream is = file.getInputStream();
+           int docPosition = originalName.indexOf(".");
+           if( docPosition > 0 ){
+              if( originalName.substring(docPosition+1).equals("xls") ){
+                  wb = new HSSFWorkbook(is);
+              }else if(originalName.substring(docPosition+1).equals("xlsx")){
+                  wb = new XSSFWorkbook(is);
+              }else {
+                  model = new ResponseModel(2018,"文件格式错误");
+                  return model ;
+              }
+              Sheet sheet = wb.getSheetAt(0);
+              int firstRowNum = sheet.getFirstRowNum()+1 ; //第一行是标题 舍去
+              int lastRowNum = sheet.getLastRowNum();
+              for( int i=firstRowNum ; i<lastRowNum ; i++){
+                 Row row = sheet.getRow(i);
+                 int firstCellIndex = row.getFirstCellNum();
+                 String studentNumber = row.getCell(firstCellIndex).toString();
+                 String password = MD5Tools.MD5(studentNumber);
+                 String name = row.getCell(firstCellIndex+1).toString();
+                 String grade = row.getCell(firstCellIndex+2).toString();
+                 if( userDao.queryUserBySchoolNumberOrName(studentNumber).size()>0){
+                     continue;
+                 }
+                 userDao.register(studentNumber,password,name,BeijingToday,grade);
+              }
+               model = new ResponseModel();
+           }else{
+              model = new ResponseModel(2018,"文件格式错误");
+           }
+        } catch (IOException e) {
+                model = new ResponseModel(2017,"文件流错误");
+        }
+
+        return model ;
+    }
+
+    @Override
+    public ResponseModel changePassword(String token, String oldPassword, String newPassword) {
+
+        ResponseModel model ;
+        LoginSession session = loginSessionDao.queryLoginSessionByKey(token) ;
+        if( session == null ){
+            model = new ResponseModel(2007,"目标用户不存在");
+        }else {
+            User user = session.getUser();
+            oldPassword = MD5Tools.MD5(oldPassword);
+            newPassword = MD5Tools.MD5(newPassword);
+            Integer result = userDao.changePassword(user.getId(),newPassword,oldPassword);
+            if( result<= 0 ){
+                model = new ResponseModel(2019,"修改密码失败，请确保原密码正确");
+            }else {
+                model = new ResponseModel();
+            }
+        }
+        return model ;
     }
 
     @Override
@@ -111,6 +193,21 @@ public class UserServiceImpl implements UserService {
         }else {
             return new ResponseModel();
         }
+    }
+
+    @Override
+    public ResponseModel currentUser(String token) {
+
+        ResponseModel model ;
+
+        LoginSession loginSession = loginSessionDao.queryLoginSessionByKey(token);
+        if( loginSession == null ){
+            model = new ResponseModel(2007,"目标用户不存在");
+        }else {
+            model = new ResponseModel();
+            model.setData(loginSession.getUser());
+        }
+        return model;
     }
 
     @Override

@@ -21,6 +21,7 @@ public class User {
     private String schoolNumber ;
     private String password ;
     private String name ;
+    private String grade ;
     private Integer type ;
     private Date createdAt ;
     private Integer valid ;
@@ -79,5 +80,13 @@ public class User {
 
     public void setValid(Integer valid) {
         this.valid = valid;
+    }
+
+    public String getGrade() {
+        return grade;
+    }
+
+    public void setGrade(String grade) {
+        this.grade = grade;
     }
 }

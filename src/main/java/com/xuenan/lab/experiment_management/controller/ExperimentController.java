@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
@@ -26,7 +27,7 @@ public class ExperimentController {
     @ResponseBody
     public ResponseModel querySelfExperiment(HttpServletRequest request){
         String token = request.getHeader("token");
-        Integer id = loginSessionService.queryValidLoginSessionByToken(token).getUserId();
+        Integer id = loginSessionService.queryValidLoginSessionByToken(token).getUser().getId();
         return experimentService.querySelfExperiment(id);
     }
 
@@ -38,17 +39,19 @@ public class ExperimentController {
 
     @PostMapping("/new")
     @ResponseBody
-    public ResponseModel queryAccessibleExperiment(
+    public ResponseModel createExperiment(
             HttpServletRequest request,
             @RequestParam("name") String name,
             @RequestParam("instruction") String instruction,
             @RequestParam("teacher_name") String teacherName,
             @RequestParam("accessible_until") @DateTimeFormat(pattern ="yyyy-MM-dd") Date accessibleUntil,
             @RequestParam("report_until") @DateTimeFormat(pattern ="yyyy-MM-dd") Date reportUntil,
-            @RequestParam("max_student_number") Integer maxStudentNumber){
+            @RequestParam("max_student_number") Integer maxStudentNumber,
+            @RequestParam("begin_time") Integer beginTime,
+            @RequestParam("stop_time") Integer stopTime){
         String token = request.getHeader("token");
-        Integer id = loginSessionService.queryValidLoginSessionByToken(token).getUserId();
-        return experimentService.createExperiment(name,instruction,id,teacherName,accessibleUntil,reportUntil,maxStudentNumber);
+        Integer id = loginSessionService.queryValidLoginSessionByToken(token).getUser().getId();
+        return experimentService.createExperiment(name,instruction,id,teacherName,accessibleUntil,reportUntil,maxStudentNumber,beginTime,stopTime);
     }
 
     @PutMapping("/update/{id}")
@@ -61,17 +64,42 @@ public class ExperimentController {
             @RequestParam("teacher_name") String teacherName,
             @RequestParam("accessible_until") @DateTimeFormat(pattern ="yyyy-MM-dd") Date accessibleUntil,
             @RequestParam("report_until") @DateTimeFormat(pattern ="yyyy-MM-dd") Date reportUntil,
-            @RequestParam("max_student_number") Integer maxStudentNumber){
+            @RequestParam("max_student_number") Integer maxStudentNumber,
+            @RequestParam("begin_time") Integer beginTime,
+            @RequestParam("stop_time") Integer stopTime){
         String token = request.getHeader("token");
-        Integer user_id = loginSessionService.queryValidLoginSessionByToken(token).getUserId();
-        return experimentService.changeExperiment(user_id,id, name, instruction, teacherName, accessibleUntil, reportUntil, maxStudentNumber);
+        Integer user_id = loginSessionService.queryValidLoginSessionByToken(token).getUser().getId();
+        return experimentService.changeExperiment(user_id,id, name, instruction, teacherName, accessibleUntil, reportUntil, maxStudentNumber,beginTime,stopTime);
+    }
+
+    @PutMapping("/book/{id}")
+    @ResponseBody
+    public ResponseModel queryAccessibleExperiment(
+            HttpServletRequest request,
+            @PathVariable Integer id,
+            @RequestParam("book") MultipartFile file){
+        String token = request.getHeader("token");
+        Integer user_id = loginSessionService.queryValidLoginSessionByToken(token).getUser().getId();
+        return experimentService.changeExperimentBook(user_id,id,file);
+    }
+
+    @PutMapping("/start/{id}")
+    @ResponseBody
+    public ResponseModel startExperimentSignIn(
+            HttpServletRequest request,
+            @PathVariable Integer id,
+            @RequestParam("longitude") Double longitude,
+            @RequestParam("latitude") Double latitude){
+        String token = request.getHeader("token");
+        Integer user_id = loginSessionService.queryValidLoginSessionByToken(token).getUser().getId();
+        return experimentService.startSignIn(user_id,id,longitude,latitude);
     }
 
     @DeleteMapping("/delete/{id}")
     @ResponseBody
     public ResponseModel queryAccessibleExperiment(HttpServletRequest request, @PathVariable Integer id){
         String token = request.getHeader("token");
-        Integer user_id = loginSessionService.queryValidLoginSessionByToken(token).getUserId();
+        Integer user_id = loginSessionService.queryValidLoginSessionByToken(token).getUser().getId();
         return experimentService.deleteExperiment(user_id,id);
     }
 }

@@ -4,9 +4,11 @@ package com.xuenan.lab.user_management.controller;
 import com.xuenan.lab.user_management.model.ResponseModel;
 import com.xuenan.lab.user_management.service.UserService;
 import org.apache.http.HttpHeaders;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -17,16 +19,35 @@ public class UserController {
     @Autowired
     private UserService userService ;
 
-    @RequestMapping("/register")
+    @PostMapping("/register")
     @ResponseBody
     public ResponseModel register( @RequestParam(value = "student_number") String schoolNumber,
                                    @RequestParam(value = "name") String name ,
-                                   @RequestParam(value = "password") String password){
+                                   @RequestParam(value = "password") String password,
+                                   @RequestParam(value = "grade") String grade){
 
-        return  userService.register(schoolNumber, name, password) ;
+        return  userService.register(schoolNumber, name, password , grade ) ;
     }
 
-    @RequestMapping("/login")
+    @PostMapping("/multi/register")
+    @ResponseBody
+    public ResponseModel multiRegister(@RequestParam(value = "file") MultipartFile file){
+
+        return  userService.multiRegister(file);
+    }
+
+
+    @PutMapping("/password")
+    @ResponseBody
+    public ResponseModel changePassword(HttpServletRequest request,
+                                        @Param("old_password") String oldPassword,
+                                        @Param("new_password") String newPassword){
+
+        String token = request.getHeader("token");
+        return userService.changePassword(token,oldPassword,newPassword);
+    }
+
+    @PostMapping("/login")
     @ResponseBody
     public ResponseModel login( @RequestParam(value = "student_number") String schoolNumber,
                                 @RequestParam(value = "password") String password){
@@ -34,12 +55,20 @@ public class UserController {
         return  userService.login(schoolNumber,password);
     }
 
-    @RequestMapping("/logout")
+    @PostMapping("/logout")
     @ResponseBody
     public ResponseModel logout(HttpServletRequest request){
 
         String token = request.getHeader("token") ;
         return  userService.logout(token);
+    }
+
+    @GetMapping("/current")
+    @ResponseBody
+    public ResponseModel currentUser(HttpServletRequest request){
+
+        String token = request.getHeader("token") ;
+        return  userService.currentUser(token);
     }
 
     @GetMapping("/all/valid")

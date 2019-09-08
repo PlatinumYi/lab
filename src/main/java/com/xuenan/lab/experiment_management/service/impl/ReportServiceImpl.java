@@ -189,4 +189,56 @@ public class ReportServiceImpl implements ReportService {
         }
         return model ;
     }
+
+    @Override
+    public ResponseModel studentSign(Integer currentUser, Integer id, Double latitude, Double longitude) {
+        ResponseModel model ;
+
+        Report report = reportDao.queryReportById(id);
+        if( report==null ){
+            model = new ResponseModel(5008, "报告不存在");
+        }else if( !currentUser.equals(report.getStudent().getId())){
+            model = new ResponseModel(5014,"用户不是实验的预约者或发起者");
+        }else {
+            Experiment experiment = report.getExperiment();
+            if (experiment.getStartSignIn() == 0 ) {
+                model = new ResponseModel(5015, "实验签到未开始");
+            } else if(  Math.abs(experiment.getLatitude()-latitude)>0.001 || Math.abs(experiment.getLongitude()-longitude)>0.001 ){
+                model = new ResponseModel(5016, "实验签到必须在老师80M半径范围内");
+            } else {
+                Integer result = reportDao.signIn(id);
+                if (result == 0) {
+                    model = new ResponseModel(5017, "签到失败");
+                } else {
+                    model = new ResponseModel();
+                }
+            }
+        }
+        return model ;
+    }
+
+    @Override
+    public ResponseModel teacherHelpSign(Integer currentUser, Integer id) {
+        ResponseModel model ;
+
+        Report report = reportDao.queryReportById(id);
+        if( report==null ){
+            model = new ResponseModel(5008, "报告不存在");
+        }else if( !currentUser.equals(report.getExperiment().getStarterId())){
+            model = new ResponseModel(5014,"用户不是实验的预约者或发起者");
+        }else {
+            Experiment experiment = report.getExperiment();
+            if (experiment.getStartSignIn() == 0 ) {
+                model = new ResponseModel(5015, "实验签到未开始");
+            } else {
+                Integer result = reportDao.signIn(id);
+                if (result == 0) {
+                    model = new ResponseModel(5018, "协助签到失败");
+                } else {
+                    model = new ResponseModel();
+                }
+            }
+        }
+        return model ;
+    }
 }

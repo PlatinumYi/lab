@@ -11,4 +11,6 @@ public interface ReportService {
     ResponseModel changeReportFile(Integer currentUser,MultipartFile file,Integer reportId);
     ResponseModel removeReport(Integer currentUser,Integer id);
     ResponseModel markReport(Integer currentUser,Integer id,Integer mark);
+    ResponseModel studentSign(Integer currentUser,Integer id,Double latitude,Double longitude);
+    ResponseModel teacherHelpSign(Integer currentUser,Integer id);
 }
