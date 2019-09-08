@@ -2,20 +2,18 @@ package com.xuenan.lab.filter;
 
 import com.xuenan.lab.entity.LoginSession;
 import com.xuenan.lab.entity.User;
-import com.xuenan.lab.user_management.dao.LoginSessionDao;
 import com.xuenan.lab.user_management.dao.UserDao;
 import com.xuenan.lab.user_management.service.LoginSessionService;
-import com.xuenan.lab.user_management.service.UserService;
-import com.xuenan.lab.user_management.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
-import sun.net.httpserver.HttpsServerImpl;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+
+//import sun.net.httpserver.HttpsServerImpl;
 
 /**
  * 此过滤器过滤所有未登录用户对某些接口的请求到/error路径下

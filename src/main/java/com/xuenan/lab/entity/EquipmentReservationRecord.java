@@ -11,7 +11,7 @@ import java.util.Date;
  *   `EQUIPMENT_ID` int(11) NOT NULL COMMENT '设备id',
  *   `USER_ID` int(11) NOT NULL COMMENT '预约者id',
  *   `RESERVE_TIME` datetime NOT NULL COMMENT '预约使用时间',
- *   `RESERVE_DURATION` int(11) NOT NULL COMMENT '使用时长',
+ *   `RESERVE_DURATION` int(11) NOT NULL COMMENT '预约时间段，4代表上午，2代表下午，1代表晚上',
  *   `STATUS` int(11) NOT NULL DEFAULT '0' COMMENT '0代表未审批，1代表同意，2代表拒绝',
  *   `APPROVER` int(11) NOT NULL DEFAULT '0' COMMENT '审批人的id',
  *   PRIMARY KEY (`ID`)

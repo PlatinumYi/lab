@@ -5,11 +5,8 @@ import com.xuenan.lab.equipment_management.service.EquipmentManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.*;
 import java.util.Date;
-import java.util.TimeZone;
 
 /**
  * @author Howie Lu
@@ -47,17 +44,31 @@ public class EquipmentManagementController {
         return equipmentManagementService.getEquipmentByName(name);
     }
 
+    //  2019-08-31前的需求代码
+    //@PostMapping("/reservationRecord")
+    //ResponseModel reserveEquipment(HttpServletRequest request) throws ParseException {
+    //    Integer equipmentId = Integer.valueOf(request.getParameter("equipmentId"));
+    //    Integer userId = Integer.valueOf(request.getParameter("userId"));
+    //    Integer reserveDuration = Integer.valueOf(request.getParameter("reserveDuration"));
+    //    String time = request.getParameter("reserveTime");
+    //    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    //    TimeZone china = TimeZone.getTimeZone("GMT+:08:00");
+    //    formatter.setTimeZone(china);
+    //    Date reserveTime = formatter.parse(time);
+    //    return equipmentManagementService.reserveEquipment(equipmentId, userId, reserveTime, reserveDuration);
+    //}
+
     @PostMapping("/reservationRecord")
-    ResponseModel reserveEquipment(HttpServletRequest request) throws ParseException {
-        Integer equipmentId = Integer.valueOf(request.getParameter("equipmentId"));
-        Integer userId = Integer.valueOf(request.getParameter("userId"));
-        Integer reserveDuration = Integer.valueOf(request.getParameter("reserveDuration"));
-        String time = request.getParameter("reserveTime");
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        TimeZone china = TimeZone.getTimeZone("GMT+:08:00");
-        formatter.setTimeZone(china);
-        Date reserveTime = formatter.parse(time);
-        return equipmentManagementService.reserveEquipment(equipmentId, userId, reserveTime, reserveDuration);
+    ResponseModel reserveEquipment(@RequestParam("equipmentId") Integer equipmentId,
+                                   @RequestParam("userId") Integer userId,
+                                   @RequestParam("reserveTime") String reserveTime,
+                                   @RequestParam("reserveDuration") Integer reserveDuration){
+        //用LocalDate类解析"yyyy-MM-dd"，并将其转化为Date
+        LocalDate reserveDate = LocalDate.parse(reserveTime);
+        ZoneId zone = ZoneId.systemDefault();
+        Instant instant = reserveDate.atStartOfDay().atZone(zone).toInstant();
+        Date date = Date.from(instant);
+        return equipmentManagementService.reserveEquipment(equipmentId, userId, date, reserveDuration);
     }
 
     //@PostMapping("/reservationRecord")
