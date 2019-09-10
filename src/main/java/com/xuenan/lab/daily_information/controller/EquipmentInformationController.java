@@ -3,6 +3,7 @@ package com.xuenan.lab.daily_information.controller;
 import com.xuenan.lab.daily_information.model.ResponseModel;
 import com.xuenan.lab.daily_information.service.EquipmentInformationService;
 import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -50,8 +51,9 @@ public class EquipmentInformationController {
     public ResponseModel create(@RequestParam("photo") MultipartFile file,
                                 @RequestParam("name") String name,
                                 @RequestParam("introduction") String introduction,
-                                @RequestParam("dangerous") Integer dangerous)
+                                @RequestParam("dangerous") Integer dangerous,
+                                @Param("alert") String alert)
     {
-        return equipmentInformationService.createEquipment(file,name,introduction,dangerous);
+        return equipmentInformationService.createEquipment(file,name,introduction,dangerous,alert);
     }
 }

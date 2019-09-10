@@ -1,16 +1,21 @@
 package com.xuenan.lab.experiment_management.service.impl;
 
 import com.xuenan.lab.entity.Experiment;
+import com.xuenan.lab.entity.Report;
 import com.xuenan.lab.experiment_management.dao.ExperimentDao;
 import com.xuenan.lab.experiment_management.dao.ReportDao;
 import com.xuenan.lab.experiment_management.model.ResponseModel;
 import com.xuenan.lab.experiment_management.service.ExperimentService;
 import com.xuenan.lab.tool.BeijingTime;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
@@ -28,8 +33,9 @@ public class ExperimentServiceImpl implements ExperimentService {
 
     private static final String LOCAL_STORAGE ="/root/LabFiles" ;
 
-    private static final String MODULE_URL = "/experiment/book/" ;
+    private static final String MODULE_URL = "/experiment/guide/" ;
 
+    private static final String DATA_URL = "/data/" ;
     @Override
     public ResponseModel createExperiment(String name, String instruction, Integer starterId, String teacherName, Date accessibleUntil, Date reportUntil, Integer maxStudentNumber,Integer beginTime,Integer stopTime) {
 
@@ -169,6 +175,53 @@ public class ExperimentServiceImpl implements ExperimentService {
                 reportDao.removeReportByExperimentId(id);
                 model = new ResponseModel();
             }
+        }
+        return model ;
+    }
+
+    @Override
+    public ResponseModel getFile(Integer user_id, Integer id) {
+        ResponseModel model ;
+        Experiment experiment = experimentDao.queryExperimentById(id);
+        if( experiment == null ){
+            model = new ResponseModel(4003,"目标实验不存在");
+        } else if( user_id != experiment.getStarterId()){
+            model = new ResponseModel(4011,"不能开始非本人发起的实验的签到");
+        }else {
+            List<Report> reports = reportDao.queryReportByExperimentId(id);
+            HSSFWorkbook workbook = new HSSFWorkbook();
+            String[] title = {"序号","姓名","学号","年级"} ;
+            HSSFSheet sheet = workbook.createSheet("选课情况");
+            HSSFRow row = sheet.createRow(0);
+            for( int i=0 ; i<title.length ; i++ ){
+                row.createCell(i).setCellValue(title[i]);
+            }
+            for( int i=1 ; i<=reports.size() ; i++ ){
+                row = sheet.createRow(1);
+                row.createCell(0).setCellValue((double)i);
+                row.createCell(1).setCellValue(reports.get(i-1).getStudent().getName());
+                row.createCell(2).setCellValue(reports.get(i-1).getStudent().getSchoolNumber());
+                row.createCell(3).setCellValue(reports.get(i-1).getStudent().getGrade());
+            }
+
+            String fileName = experiment.getId()+".xls" ;
+            File file = new File(LOCAL_STORAGE+DATA_URL+fileName);
+            if( file.exists() ){
+                file.delete() ;
+            }
+
+            try {
+                FileOutputStream outputStream = new FileOutputStream(file);
+                workbook.write(outputStream);
+                outputStream.close();
+            } catch (IOException e) {
+                model = new ResponseModel(4013,"导出文件失败");
+                return model ;
+            }
+
+            model = new ResponseModel();
+            model.setData(DATA_URL+fileName);
+
         }
         return model ;
     }

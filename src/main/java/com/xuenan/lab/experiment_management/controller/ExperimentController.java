@@ -56,7 +56,7 @@ public class ExperimentController {
 
     @PutMapping("/update/{id}")
     @ResponseBody
-    public ResponseModel queryAccessibleExperiment(
+    public ResponseModel changeExperiment(
             HttpServletRequest request,
             @PathVariable Integer id,
             @RequestParam("name") String name,
@@ -74,7 +74,7 @@ public class ExperimentController {
 
     @PutMapping("/book/{id}")
     @ResponseBody
-    public ResponseModel queryAccessibleExperiment(
+    public ResponseModel changeExperimentBook(
             HttpServletRequest request,
             @PathVariable Integer id,
             @RequestParam("book") MultipartFile file){
@@ -83,9 +83,19 @@ public class ExperimentController {
         return experimentService.changeExperimentBook(user_id,id,file);
     }
 
+    @GetMapping("/excel/{id}")
+    @ResponseBody
+    public ResponseModel getExcel(
+            HttpServletRequest request,
+            @PathVariable Integer id){
+        String token = request.getHeader("token");
+        Integer user_id = loginSessionService.queryValidLoginSessionByToken(token).getUser().getId();
+        return experimentService.getFile(user_id,id);
+    }
+
     @PutMapping("/start/{id}")
     @ResponseBody
-    public ResponseModel startExperimentSignIn(
+    public ResponseModel startSignIn(
             HttpServletRequest request,
             @PathVariable Integer id,
             @RequestParam("longitude") Double longitude,
@@ -97,7 +107,7 @@ public class ExperimentController {
 
     @DeleteMapping("/delete/{id}")
     @ResponseBody
-    public ResponseModel queryAccessibleExperiment(HttpServletRequest request, @PathVariable Integer id){
+    public ResponseModel deleteExperiment(HttpServletRequest request, @PathVariable Integer id){
         String token = request.getHeader("token");
         Integer user_id = loginSessionService.queryValidLoginSessionByToken(token).getUser().getId();
         return experimentService.deleteExperiment(user_id,id);
