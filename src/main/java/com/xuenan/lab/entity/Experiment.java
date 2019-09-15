@@ -23,7 +23,7 @@ import java.util.Date;
 public class Experiment {
 
     private Integer id ;
-    private String name;
+    private String name ;
     private String instruction ;
     private Integer starterId ;
     private String teacherName ;
@@ -37,6 +37,7 @@ public class Experiment {
     private String guideBook ;
     private Integer beginTime ;
     private Integer stopTime ;
+    private Room room ;
 
     public Integer getId() {
         return id;
@@ -156,5 +157,13 @@ public class Experiment {
 
     public void setStopTime(Integer stopTime) {
         this.stopTime = stopTime;
+    }
+
+    public Room getRoom() {
+        return room;
+    }
+
+    public void setRoom(Room room) {
+        this.room = room;
     }
 }

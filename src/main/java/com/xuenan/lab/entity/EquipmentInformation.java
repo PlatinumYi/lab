@@ -19,6 +19,7 @@ public class EquipmentInformation {
     private String introduction ;
     private Integer valid ;
     private String photoSrc ;
+    private String alert;
 
     public Integer getId() {
         return id;
@@ -66,5 +67,13 @@ public class EquipmentInformation {
 
     public void setPhotoSrc(String photoSrc) {
         this.photoSrc = photoSrc;
+    }
+
+    public String getAlert() {
+        return alert;
+    }
+
+    public void setAlert(String alert) {
+        this.alert = alert;
     }
 }

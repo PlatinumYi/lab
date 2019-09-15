@@ -37,12 +37,12 @@ public class ExperimentServiceImpl implements ExperimentService {
 
     private static final String DATA_URL = "/data/" ;
     @Override
-    public ResponseModel createExperiment(String name, String instruction, Integer starterId, String teacherName, Date accessibleUntil, Date reportUntil, Integer maxStudentNumber,Integer beginTime,Integer stopTime) {
+    public ResponseModel createExperiment(String name, String instruction, Integer starterId, String teacherName, Date accessibleUntil, Date reportUntil, Integer maxStudentNumber,Integer beginTime,Integer stopTime,Integer roomId) {
 
         ResponseModel model ;
         if( accessibleUntil.after(reportUntil) || stopTime<=beginTime ){
             model = new ResponseModel(4001,"完结时间不能早于报名截止时间");
-        }else if( experimentDao.createExperiment(name, instruction, starterId, teacherName, BeijingTime.getBeijingTime(accessibleUntil), BeijingTime.getBeijingTime(reportUntil), maxStudentNumber,beginTime,stopTime) == 0 ){
+        }else if( experimentDao.createExperiment(name, instruction, starterId, teacherName, BeijingTime.getBeijingTime(accessibleUntil), BeijingTime.getBeijingTime(reportUntil), maxStudentNumber,beginTime,stopTime,roomId) == 0 ){
             model = new ResponseModel(4002,"创建实验失败");
         }else{
             model = new ResponseModel();
@@ -51,7 +51,7 @@ public class ExperimentServiceImpl implements ExperimentService {
     }
 
     @Override
-    public ResponseModel changeExperiment(Integer user_id ,Integer id, String name, String instruction,String teacherName, Date accessibleUntil, Date reportUntil, Integer maxStudentNumber,Integer beginTime,Integer stopTime) {
+    public ResponseModel changeExperiment(Integer user_id ,Integer id, String name, String instruction,String teacherName, Date accessibleUntil, Date reportUntil, Integer maxStudentNumber,Integer beginTime,Integer stopTime,Integer roomId) {
 
         ResponseModel model ;
         Experiment experiment = experimentDao.queryExperimentById(id);
@@ -66,7 +66,7 @@ public class ExperimentServiceImpl implements ExperimentService {
         } else if( user_id != experiment.getStarterId()){
             model = new ResponseModel(4005,"不能设定非本人发起的实验");
         }else {
-            Integer result = experimentDao.changeExperiment(id, name, instruction, teacherName,BeijingTime.getBeijingTime(accessibleUntil), BeijingTime.getBeijingTime(reportUntil), maxStudentNumber,beginTime,stopTime);
+            Integer result = experimentDao.changeExperiment(id, name, instruction, teacherName,BeijingTime.getBeijingTime(accessibleUntil), BeijingTime.getBeijingTime(reportUntil), maxStudentNumber,beginTime,stopTime,roomId);
             if(result == 0){
                 model = new ResponseModel(4006,"修改实验失败");
             }else {

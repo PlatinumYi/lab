@@ -48,10 +48,11 @@ public class ExperimentController {
             @RequestParam("report_until") @DateTimeFormat(pattern ="yyyy-MM-dd") Date reportUntil,
             @RequestParam("max_student_number") Integer maxStudentNumber,
             @RequestParam("begin_time") Integer beginTime,
-            @RequestParam("stop_time") Integer stopTime){
+            @RequestParam("stop_time") Integer stopTime,
+            @RequestParam("room_id") Integer roomId){
         String token = request.getHeader("token");
         Integer id = loginSessionService.queryValidLoginSessionByToken(token).getUser().getId();
-        return experimentService.createExperiment(name,instruction,id,teacherName,accessibleUntil,reportUntil,maxStudentNumber,beginTime,stopTime);
+        return experimentService.createExperiment(name,instruction,id,teacherName,accessibleUntil,reportUntil,maxStudentNumber,beginTime,stopTime,roomId);
     }
 
     @PutMapping("/update/{id}")
@@ -66,10 +67,11 @@ public class ExperimentController {
             @RequestParam("report_until") @DateTimeFormat(pattern ="yyyy-MM-dd") Date reportUntil,
             @RequestParam("max_student_number") Integer maxStudentNumber,
             @RequestParam("begin_time") Integer beginTime,
-            @RequestParam("stop_time") Integer stopTime){
+            @RequestParam("stop_time") Integer stopTime,
+            @RequestParam("room_id") Integer roomId){
         String token = request.getHeader("token");
         Integer user_id = loginSessionService.queryValidLoginSessionByToken(token).getUser().getId();
-        return experimentService.changeExperiment(user_id,id, name, instruction, teacherName, accessibleUntil, reportUntil, maxStudentNumber,beginTime,stopTime);
+        return experimentService.changeExperiment(user_id,id, name, instruction, teacherName, accessibleUntil, reportUntil, maxStudentNumber,beginTime,stopTime,roomId);
     }
 
     @PutMapping("/book/{id}")

@@ -10,8 +10,8 @@ import java.util.List;
 public interface ExperimentDao {
 
 
-    @Insert("INSERT INTO experiment(NAME,INSTRUCTION,STARTER_ID,TEACHER_NAME,ACCESSIBLE_UNTIL,REPORT_UNTIL,MAX_STUDENT_NUMBER,BEGIN_TIME,STOP_TIME)" +
-            "VALUES(#{name},#{instruction},#{starterId},#{teacherName},#{accessibleUntil},#{reportUntil},#{maxStudentNumber},#{beginTime},#{stopTime})")
+    @Insert("INSERT INTO experiment(NAME,INSTRUCTION,STARTER_ID,TEACHER_NAME,ACCESSIBLE_UNTIL,REPORT_UNTIL,MAX_STUDENT_NUMBER,BEGIN_TIME,STOP_TIME,ROOM_ID)" +
+            "VALUES(#{name},#{instruction},#{starterId},#{teacherName},#{accessibleUntil},#{reportUntil},#{maxStudentNumber},#{beginTime},#{stopTime},#{roomId})")
     Integer createExperiment(@Param("name") String name,
                              @Param("instruction") String instruction,
                              @Param("starterId") Integer starterId ,
@@ -20,10 +20,11 @@ public interface ExperimentDao {
                              @Param("reportUntil") Date reportUntil,
                              @Param("maxStudentNumber") Integer maxStudentNumber,
                              @Param("beginTime") Integer beginTime,
-                             @Param("stopTime") Integer stopTime);
+                             @Param("stopTime") Integer stopTime,
+                             @Param("roomId") Integer roomId);
 
     @Update("UPDATE experiment SET NAME=#{name},INSTRUCTION=#{instruction},TEACHER_NAME=#{teacherName},BEGIN_TIME={beginTime},STOP_TIME=#{stopTime}" +
-            "ACCESSIBLE_UNTIL=#{accessibleUntil},REPORT_UNTIL=#{reportUntil},MAX_STUDENT_NUMBER=#{maxStudentNumber} WHERE ID=#{id}")
+            "ACCESSIBLE_UNTIL=#{accessibleUntil},REPORT_UNTIL=#{reportUntil},MAX_STUDENT_NUMBER=#{maxStudentNumber},ROOM_ID=#{roomId} WHERE ID=#{id}")
     Integer changeExperiment(@Param("id") Integer id,
                              @Param("name") String name,
                              @Param("instruction") String instruction,
@@ -32,19 +33,39 @@ public interface ExperimentDao {
                              @Param("reportUntil") Date reportUntil,
                              @Param("maxStudentNumber") Integer maxStudentNumber,
                              @Param("beginTime") Integer beginTime,
-                             @Param("stopTime") Integer stopTime );
+                             @Param("stopTime") Integer stopTime,
+                             @Param("roomId") Integer roomId);
 
     @Update("UPDATE experiment SET GUIDE_BOOK=#{guideBook} WHERE ID=#{id}")
     Integer changeExperimentBook (@Param("id") Integer id,
                                   @Param("guideBook") String guideBook);
 
     @Select("SELECT * FROM experiment WHERE STARTER_ID=#{id}")
+    @Results( id="experimentMap" , value = {
+            @Result( column = "ID",property = "id",id = true),
+            @Result( column = "NAME",property = "student"),
+            @Result( column = "STARTER_ID",property = "starterId"),
+            @Result( column = "TEACHER_NAME",property = "teacherName"),
+            @Result( column = "ACCESSIBLE_UNTIL",property = "accessibleUntil"),
+            @Result( column = "REPORT_UNTIL",property = "reportUntil"),
+            @Result( column = "MAX_STUDENT_NUMBER",property = "maxStudentNumber"),
+            @Result( column = "CURRENT_STUDENT_NUMBER",property = "currentStudentNumber"),
+            @Result( column = "START_SIGN_IN",property = "startSignIn"),
+            @Result( column = "LONGITUDE",property = "longitude"),
+            @Result( column = "GUIDE_BOOK",property = "latitude"),
+            @Result( column = "BEGIN_TIME",property = "beginTime"),
+            @Result( column = "STOP_TIME",property = "stopTime"),
+            @Result( column = "ROOM_ID",property = "room",one = @One(select = "com.xuenan.lab.daily_information.dao.RoomDao.queryRoomById")),
+
+    })
     List<Experiment> queryExperimentByStarterId(@Param("id") Integer id);
 
     @Select("SELECT * FROM experiment WHERE ACCESSIBLE_UNTIL>=#{date}")
+    @ResultMap(value = "experimentMap")
     List<Experiment> queryAccessibleExperiment(@Param("date") Date date);
 
     @Select("SELECT * FROM experiment WHERE ID=#{id}")
+    @ResultMap(value = "experimentMap")
     Experiment queryExperimentById(@Param("id") Integer id);
 
     @Delete("DELETE FROM experiment WHERE ID=#{id}")
