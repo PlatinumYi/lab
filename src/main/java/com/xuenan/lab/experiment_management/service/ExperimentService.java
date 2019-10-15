@@ -15,4 +15,5 @@ public interface ExperimentService {
     ResponseModel queryAccessibleExperiment();
     ResponseModel startSignIn( Integer user_id , Integer id , Double longitude , Double latitude );
     ResponseModel getFile(Integer user_id,Integer id);
+    ResponseModel getRecord();
 }

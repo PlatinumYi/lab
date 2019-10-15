@@ -61,6 +61,10 @@ public interface ExperimentDao {
     })
     List<Experiment> queryExperimentByStarterId(@Param("id") Integer id);
 
+    @Select("SELECT * FROM experiment")
+    @ResultMap(value = "experimentMap")
+    List<Experiment> queryExperiment();
+
     @Select("SELECT * FROM experiment WHERE ACCESSIBLE_UNTIL>=#{date}")
     @ResultMap(value = "experimentMap")
     List<Experiment> queryAccessibleExperiment(@Param("date") Date date);
