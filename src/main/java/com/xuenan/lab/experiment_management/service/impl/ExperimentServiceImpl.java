@@ -40,7 +40,7 @@ public class ExperimentServiceImpl implements ExperimentService {
     public ResponseModel createExperiment(String name, String instruction, Integer starterId, String teacherName, Date accessibleUntil, Date reportUntil, Integer maxStudentNumber,Integer beginTime,Integer stopTime,Integer roomId) {
 
         ResponseModel model ;
-        if( accessibleUntil.after(reportUntil) || stopTime<=beginTime ){
+        if( accessibleUntil.after(reportUntil) || stopTime<beginTime ){
             model = new ResponseModel(4001,"完结时间不能早于报名截止时间");
         }else if( experimentDao.createExperiment(name, instruction, starterId, teacherName, BeijingTime.getBeijingTime(accessibleUntil), BeijingTime.getBeijingTime(reportUntil), maxStudentNumber,beginTime,stopTime,roomId) == 0 ){
             model = new ResponseModel(4002,"创建实验失败");
@@ -55,7 +55,7 @@ public class ExperimentServiceImpl implements ExperimentService {
 
         ResponseModel model ;
         Experiment experiment = experimentDao.queryExperimentById(id);
-        if( accessibleUntil.after(reportUntil)|| stopTime<=beginTime){
+        if( accessibleUntil.after(reportUntil)|| stopTime<beginTime){
             model = new ResponseModel(4001,"完结时间不能早于报名截止时间");
         } else if( experiment == null ){
             model = new ResponseModel(4003,"目标实验不存在");

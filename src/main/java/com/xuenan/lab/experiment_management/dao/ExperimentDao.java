@@ -43,7 +43,7 @@ public interface ExperimentDao {
     @Select("SELECT * FROM experiment WHERE STARTER_ID=#{id}")
     @Results( id="experimentMap" , value = {
             @Result( column = "ID",property = "id",id = true),
-            @Result( column = "NAME",property = "student"),
+            @Result( column = "NAME",property = "name"),
             @Result( column = "STARTER_ID",property = "starterId"),
             @Result( column = "TEACHER_NAME",property = "teacherName"),
             @Result( column = "ACCESSIBLE_UNTIL",property = "accessibleUntil"),
@@ -52,7 +52,8 @@ public interface ExperimentDao {
             @Result( column = "CURRENT_STUDENT_NUMBER",property = "currentStudentNumber"),
             @Result( column = "START_SIGN_IN",property = "startSignIn"),
             @Result( column = "LONGITUDE",property = "longitude"),
-            @Result( column = "GUIDE_BOOK",property = "latitude"),
+            @Result( column = "LATITUDE",property = "latitude"),
+            @Result( column = "GUIDE_BOOK",property = "guideBook"),
             @Result( column = "BEGIN_TIME",property = "beginTime"),
             @Result( column = "STOP_TIME",property = "stopTime"),
             @Result( column = "ROOM_ID",property = "room",one = @One(select = "com.xuenan.lab.daily_information.dao.RoomDao.queryRoomById")),

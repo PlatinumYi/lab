@@ -20,6 +20,7 @@ public class FilterConfig {
         bean.addUrlPatterns("/user/multi/register");
         bean.addUrlPatterns("/user/enable/*");
         bean.addUrlPatterns("/user/delete/*");
+        bean.addUrlPatterns("/user/reset/*");
         bean.addUrlPatterns("/user/type/*");
         bean.addUrlPatterns("/information/photo/delete/*");
         bean.addUrlPatterns("/information/photo/name/*");

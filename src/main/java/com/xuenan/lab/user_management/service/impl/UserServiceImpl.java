@@ -251,16 +251,33 @@ import java.util.List;
     }
 
     @Override
-    public ResponseModel enableUser(Integer id) {
+    public ResponseModel resetPassword(Integer id) {
         ResponseModel model ;
         User user = userDao.queryUserById(id) ;
         if( user == null ){
             model = new ResponseModel(2007,"目标用户不存在");
         }else if( user.getType()  == 3 ){
             model = new ResponseModel(2008,"不能操作管理员");
+        }else {
+            Integer result = userDao.resetPassword(id);
+            if(result>0){
+                model = new ResponseModel() ;
+            }else {
+                model = new ResponseModel(2016,"密码重置失败");
+            }
+        }
+        return model ;
+    }
+
+    @Override
+    public ResponseModel enableUser(Integer id) {
+        ResponseModel model ;
+        User user = userDao.queryUserById(id) ;
+        if( user == null ){
+            model = new ResponseModel(2007,"目标用户不存在");
         }else if( user.getValid() == 1 ){
             model = new ResponseModel(2011,"用户已经处于可使用状态");
-        }else {
+        } else {
             Integer result = userDao.enableUser(id);
             if(result>0){
                 model = new ResponseModel() ;
