@@ -10,7 +10,7 @@ import java.util.Date;
 
 /**
  * @author Howie Lu
- * @version Updated at 2019/08/01
+ * @version Updated at 2019/10/15
  * @description
  */
 @RestController
@@ -35,8 +35,13 @@ public class EquipmentManagementController {
     }
 
     @GetMapping("/reservationRecord/{userId}")
-    ResponseModel getReservationRecord(@PathVariable Integer userId){
-        return equipmentManagementService.getReservationRecord(userId);
+    ResponseModel getReservationRecord(@PathVariable String userId){
+        return equipmentManagementService.getReservationRecord(Integer.valueOf(userId));
+    }
+
+    @GetMapping("/reservationRecord/equipment/{equipmentId}")
+    ResponseModel getReservationRecordByEquipmentId(@PathVariable String equipmentId){
+        return equipmentManagementService.getReservationRecordByEquipmentId(Integer.valueOf(equipmentId));
     }
 
     @GetMapping("/name")

@@ -12,7 +12,7 @@ import java.util.*;
 
 /**
  * @author Howie Lu
- * @version Updated at 2019/08/01
+ * @version Updated at 2019/10/15
  * @description
  */
 @Service("EquipmentManagementService")
@@ -71,6 +71,27 @@ public class EquipmentManagementServiceImpl implements EquipmentManagementServic
                 responseModel = new ResponseModel();
                 responseModel.setData(records);
             }
+        }
+        return responseModel;
+    }
+
+    @Override
+    public ResponseModel getReservationRecordByEquipmentId(Integer equipmentId) {
+        ResponseModel responseModel = null;
+        List<EquipmentReservationRecord> records = equipmentManagementDao.getReservationRecordByEquipmentId(equipmentId);
+        if (records == null || records.size() < 1){
+            responseModel = new ResponseModel(111, "该设备尚无预约记录");
+        } else{
+            responseModel = new ResponseModel();
+            List<Map<String, Object>> model = new ArrayList<>();
+            for (EquipmentReservationRecord record: records) {
+                //map.clear();
+                Map<String, Object> map = new HashMap<>();
+                map.put("reservedDate", record.getReserveTime());
+                map.put("reservedDuration", record.getReserveDuration());
+                model.add(map);
+            }
+            responseModel.setData(model);
         }
         return responseModel;
     }

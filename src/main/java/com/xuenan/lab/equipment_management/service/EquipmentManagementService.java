@@ -6,7 +6,7 @@ import java.util.Date;
 
 /**
  * @author Howie Lu
- * @version Updated at 2019/08/01
+ * @version Updated at 2019/10/15
  * @description
  */
 public interface EquipmentManagementService {
@@ -34,6 +34,13 @@ public interface EquipmentManagementService {
      * @return 数据模型
      */
     ResponseModel getReservationRecord(Integer userId);
+
+    /**
+     * 获得某用户的预约记录
+     * @param equipmentId 用户id
+     * @return 数据模型
+     */
+    ResponseModel getReservationRecordByEquipmentId(Integer equipmentId);
 
     /**
      * 通过设备名称获得设备信息
