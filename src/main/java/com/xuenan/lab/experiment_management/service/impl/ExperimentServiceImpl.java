@@ -7,6 +7,7 @@ import com.xuenan.lab.experiment_management.dao.ReportDao;
 import com.xuenan.lab.experiment_management.model.ResponseModel;
 import com.xuenan.lab.experiment_management.service.ExperimentService;
 import com.xuenan.lab.tool.BeijingTime;
+import com.xuenan.lab.tool.RandomSessionKey;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -190,18 +191,17 @@ public class ExperimentServiceImpl implements ExperimentService {
         }else {
             List<Report> reports = reportDao.queryReportByExperimentId(id);
             HSSFWorkbook workbook = new HSSFWorkbook();
-            String[] title = {"序号","姓名","学号","年级"} ;
+            String[] title = {"姓名","学号","年级"} ;
             HSSFSheet sheet = workbook.createSheet("选课情况");
             HSSFRow row = sheet.createRow(0);
             for( int i=0 ; i<title.length ; i++ ){
                 row.createCell(i).setCellValue(title[i]);
             }
             for( int i=1 ; i<=reports.size() ; i++ ){
-                row = sheet.createRow(1);
-                row.createCell(0).setCellValue((double)i);
-                row.createCell(1).setCellValue(reports.get(i-1).getStudent().getName());
-                row.createCell(2).setCellValue(reports.get(i-1).getStudent().getSchoolNumber());
-                row.createCell(3).setCellValue(reports.get(i-1).getStudent().getGrade());
+                row = sheet.createRow(i);
+                row.createCell(0).setCellValue(reports.get(i-1).getStudent().getName());
+                row.createCell(1).setCellValue(reports.get(i-1).getStudent().getSchoolNumber());
+                row.createCell(2).setCellValue(reports.get(i-1).getStudent().getGrade());
             }
 
             String fileName = experiment.getId()+".xls" ;
@@ -215,7 +215,53 @@ public class ExperimentServiceImpl implements ExperimentService {
                 workbook.write(outputStream);
                 outputStream.close();
             } catch (IOException e) {
-                model = new ResponseModel(4013,"导出文件失败");
+                model = new ResponseModel(4013,"导出文选课记录失败");
+                return model ;
+            }
+
+            model = new ResponseModel();
+            model.setData(DATA_URL+fileName);
+
+        }
+        return model ;
+    }
+
+    @Override
+    public ResponseModel getRecord() {
+        ResponseModel model ;
+        List<Experiment> experiments = experimentDao.queryExperiment();
+        if( experiments == null ){
+            model = new ResponseModel(4003,"目标实验不存在");
+        }else {
+            HSSFWorkbook workbook = new HSSFWorkbook();
+            String[] title = {"课程名称","课程说明","任课教师","上课时间","上课地点","选课人数"} ;
+            HSSFSheet sheet = workbook.createSheet("选课情况");
+            HSSFRow row = sheet.createRow(0);
+            for( int i=0 ; i<title.length ; i++ ){
+                row.createCell(i).setCellValue(title[i]);
+            }
+            for( int i=1 ; i<=experiments.size() ; i++ ){
+                row = sheet.createRow(i);
+                row.createCell(0).setCellValue(experiments.get(i-1).getName());
+                row.createCell(1).setCellValue(experiments.get(i-1).getInstruction());
+                row.createCell(2).setCellValue(experiments.get(i-1).getTeacherName());
+                row.createCell(3).setCellValue(experiments.get(i-1).getReportUntil());
+                row.createCell(4).setCellValue(experiments.get(i-1).getRoom().getName());
+                row.createCell(5).setCellValue(experiments.get(i-1).getCurrentStudentNumber());
+            }
+
+            String fileName = RandomSessionKey.getRandomChar(35)+".xls" ;
+            File file = new File(LOCAL_STORAGE+DATA_URL+fileName);
+            if( file.exists() ){
+                file.delete() ;
+            }
+
+            try {
+                FileOutputStream outputStream = new FileOutputStream(file);
+                workbook.write(outputStream);
+                outputStream.close();
+            } catch (IOException e) {
+                model = new ResponseModel(4014,"导出开课记录失败");
                 return model ;
             }
 

@@ -95,6 +95,12 @@ public class ExperimentController {
         return experimentService.getFile(user_id,id);
     }
 
+    @GetMapping("/excel")
+    @ResponseBody
+    public ResponseModel getClassExcel(HttpServletRequest request) {
+        return experimentService.getRecord();
+    }
+
     @PutMapping("/start/{id}")
     @ResponseBody
     public ResponseModel startSignIn(
