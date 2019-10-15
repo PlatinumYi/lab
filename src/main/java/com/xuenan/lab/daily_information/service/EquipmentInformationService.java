@@ -10,6 +10,6 @@ public interface EquipmentInformationService {
     ResponseModel enableEquipment(Integer id) ;
     ResponseModel banEquipment(Integer id );
     ResponseModel removeEquipment(Integer id);
-    ResponseModel createEquipment(MultipartFile photo,String name,String introduction,Integer dangerous);
+    ResponseModel createEquipment(MultipartFile photo,String name,String introduction,Integer dangerous,String alert);
 
 }

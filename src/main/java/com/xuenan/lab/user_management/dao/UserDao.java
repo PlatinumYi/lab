@@ -48,6 +48,9 @@ public interface UserDao {
     @Update("UPDATE user SET PASSWORD=#{newPass} WHERE ID=#{id} AND PASSWORD=#{oldPass}")
     Integer changePassword( @Param("id") Integer id ,@Param("newPass") String newPass ,@Param("oldPass") String oldPass);
 
+    @Update("UPDATE user SET PASSWORD=123456 WHERE ID=#{id}")
+    Integer resetPassword( @Param("id") Integer id );
+
     @Update("UPDATE user SET TYPE=#{type} WHERE ID=#{id}")
     Integer setUserType(@Param("type") Integer type , @Param("id") Integer id );
 }

@@ -14,6 +14,7 @@ public interface UserService {
     ResponseModel queryallValid();
     ResponseModel queryallInvalid();
     ResponseModel banUser( Integer id );
+    ResponseModel resetPassword( Integer id );
     ResponseModel enableUser( Integer id );
     ResponseModel setUserType( Integer id , Integer type) ;
     ResponseModel deleteUser( Integer id );

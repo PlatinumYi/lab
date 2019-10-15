@@ -117,7 +117,7 @@ public class EquipmentInformationServiceImpl implements EquipmentInformationServ
     }
 
     @Override
-    public ResponseModel createEquipment(MultipartFile file, String name, String introduction, Integer dangerous) {
+    public ResponseModel createEquipment(MultipartFile file, String name, String introduction, Integer dangerous ,String alert) {
         ResponseModel model ;
 
         if( file.isEmpty() ){
@@ -142,7 +142,7 @@ public class EquipmentInformationServiceImpl implements EquipmentInformationServ
             try {
                 File targetFile = new File(LOCAL_STORAGE+MODULE_URL+fileName);
                 file.transferTo(targetFile);
-                equipmentInformationDao.createEquipment(name,introduction,dangerous,MODULE_URL+fileName);
+                equipmentInformationDao.createEquipment(name,introduction,dangerous,MODULE_URL+fileName,alert);
                 model = new ResponseModel() ;
             }catch (IOException e){
                 model = new ResponseModel(1213,"文件存储失败");

@@ -1,16 +1,21 @@
 package com.xuenan.lab.experiment_management.service.impl;
 
 import com.xuenan.lab.entity.Experiment;
+import com.xuenan.lab.entity.Report;
 import com.xuenan.lab.experiment_management.dao.ExperimentDao;
 import com.xuenan.lab.experiment_management.dao.ReportDao;
 import com.xuenan.lab.experiment_management.model.ResponseModel;
 import com.xuenan.lab.experiment_management.service.ExperimentService;
 import com.xuenan.lab.tool.BeijingTime;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
@@ -28,15 +33,16 @@ public class ExperimentServiceImpl implements ExperimentService {
 
     private static final String LOCAL_STORAGE ="/root/LabFiles" ;
 
-    private static final String MODULE_URL = "/experiment/book/" ;
+    private static final String MODULE_URL = "/experiment/guide/" ;
 
+    private static final String DATA_URL = "/data/" ;
     @Override
-    public ResponseModel createExperiment(String name, String instruction, Integer starterId, String teacherName, Date accessibleUntil, Date reportUntil, Integer maxStudentNumber,Integer beginTime,Integer stopTime) {
+    public ResponseModel createExperiment(String name, String instruction, Integer starterId, String teacherName, Date accessibleUntil, Date reportUntil, Integer maxStudentNumber,Integer beginTime,Integer stopTime,Integer roomId) {
 
         ResponseModel model ;
-        if( accessibleUntil.after(reportUntil) || stopTime<=beginTime ){
+        if( accessibleUntil.after(reportUntil) || stopTime<beginTime ){
             model = new ResponseModel(4001,"完结时间不能早于报名截止时间");
-        }else if( experimentDao.createExperiment(name, instruction, starterId, teacherName, BeijingTime.getBeijingTime(accessibleUntil), BeijingTime.getBeijingTime(reportUntil), maxStudentNumber,beginTime,stopTime) == 0 ){
+        }else if( experimentDao.createExperiment(name, instruction, starterId, teacherName, BeijingTime.getBeijingTime(accessibleUntil), BeijingTime.getBeijingTime(reportUntil), maxStudentNumber,beginTime,stopTime,roomId) == 0 ){
             model = new ResponseModel(4002,"创建实验失败");
         }else{
             model = new ResponseModel();
@@ -45,11 +51,11 @@ public class ExperimentServiceImpl implements ExperimentService {
     }
 
     @Override
-    public ResponseModel changeExperiment(Integer user_id ,Integer id, String name, String instruction,String teacherName, Date accessibleUntil, Date reportUntil, Integer maxStudentNumber,Integer beginTime,Integer stopTime) {
+    public ResponseModel changeExperiment(Integer user_id ,Integer id, String name, String instruction,String teacherName, Date accessibleUntil, Date reportUntil, Integer maxStudentNumber,Integer beginTime,Integer stopTime,Integer roomId) {
 
         ResponseModel model ;
         Experiment experiment = experimentDao.queryExperimentById(id);
-        if( accessibleUntil.after(reportUntil)|| stopTime<=beginTime){
+        if( accessibleUntil.after(reportUntil)|| stopTime<beginTime){
             model = new ResponseModel(4001,"完结时间不能早于报名截止时间");
         } else if( experiment == null ){
             model = new ResponseModel(4003,"目标实验不存在");
@@ -60,7 +66,7 @@ public class ExperimentServiceImpl implements ExperimentService {
         } else if( user_id != experiment.getStarterId()){
             model = new ResponseModel(4005,"不能设定非本人发起的实验");
         }else {
-            Integer result = experimentDao.changeExperiment(id, name, instruction, teacherName,BeijingTime.getBeijingTime(accessibleUntil), BeijingTime.getBeijingTime(reportUntil), maxStudentNumber,beginTime,stopTime);
+            Integer result = experimentDao.changeExperiment(id, name, instruction, teacherName,BeijingTime.getBeijingTime(accessibleUntil), BeijingTime.getBeijingTime(reportUntil), maxStudentNumber,beginTime,stopTime,roomId);
             if(result == 0){
                 model = new ResponseModel(4006,"修改实验失败");
             }else {
@@ -169,6 +175,53 @@ public class ExperimentServiceImpl implements ExperimentService {
                 reportDao.removeReportByExperimentId(id);
                 model = new ResponseModel();
             }
+        }
+        return model ;
+    }
+
+    @Override
+    public ResponseModel getFile(Integer user_id, Integer id) {
+        ResponseModel model ;
+        Experiment experiment = experimentDao.queryExperimentById(id);
+        if( experiment == null ){
+            model = new ResponseModel(4003,"目标实验不存在");
+        } else if( user_id != experiment.getStarterId()){
+            model = new ResponseModel(4011,"不能开始非本人发起的实验的签到");
+        }else {
+            List<Report> reports = reportDao.queryReportByExperimentId(id);
+            HSSFWorkbook workbook = new HSSFWorkbook();
+            String[] title = {"序号","姓名","学号","年级"} ;
+            HSSFSheet sheet = workbook.createSheet("选课情况");
+            HSSFRow row = sheet.createRow(0);
+            for( int i=0 ; i<title.length ; i++ ){
+                row.createCell(i).setCellValue(title[i]);
+            }
+            for( int i=1 ; i<=reports.size() ; i++ ){
+                row = sheet.createRow(1);
+                row.createCell(0).setCellValue((double)i);
+                row.createCell(1).setCellValue(reports.get(i-1).getStudent().getName());
+                row.createCell(2).setCellValue(reports.get(i-1).getStudent().getSchoolNumber());
+                row.createCell(3).setCellValue(reports.get(i-1).getStudent().getGrade());
+            }
+
+            String fileName = experiment.getId()+".xls" ;
+            File file = new File(LOCAL_STORAGE+DATA_URL+fileName);
+            if( file.exists() ){
+                file.delete() ;
+            }
+
+            try {
+                FileOutputStream outputStream = new FileOutputStream(file);
+                workbook.write(outputStream);
+                outputStream.close();
+            } catch (IOException e) {
+                model = new ResponseModel(4013,"导出文件失败");
+                return model ;
+            }
+
+            model = new ResponseModel();
+            model.setData(DATA_URL+fileName);
+
         }
         return model ;
     }

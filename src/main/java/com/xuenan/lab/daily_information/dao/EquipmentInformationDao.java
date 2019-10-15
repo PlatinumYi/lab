@@ -26,9 +26,10 @@ public interface EquipmentInformationDao {
     @Delete("DELETE FROM equipment_information WHERE valid=0 AND ID=#{id}")
     Integer removeEquipment(@Param("id") Integer id);
 
-    @Insert("INSERT INTO equipment_information(NAME,INTRODUCTION,DANGEROUS,PHOTO_SRC) VALUES (#{name},#{introduction},#{dangerous},#{photoSrc})")
+    @Insert("INSERT INTO equipment_information(NAME,INTRODUCTION,DANGEROUS,PHOTO_SRC,ALERT) VALUES (#{name},#{introduction},#{dangerous},#{photoSrc},#{alert})")
     Integer createEquipment(@Param("name") String name,
                            @Param("introduction") String introduction,
                            @Param("dangerous") Integer dangerous,
-                           @Param("photoSrc") String photoSrc);
+                           @Param("photoSrc") String photoSrc,
+                            @Param("alert") String alert);
 }

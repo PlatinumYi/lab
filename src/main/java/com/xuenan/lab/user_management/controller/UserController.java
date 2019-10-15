@@ -101,6 +101,12 @@ public class UserController {
         return userService.enableUser(id);
     }
 
+    @PutMapping("/reset/{id}")
+    @ResponseBody
+    public ResponseModel resetUserPassword(@PathVariable Integer id ){
+        return userService.resetPassword(id);
+    }
+
     @DeleteMapping("/delete/{id}")
     @ResponseBody
     public ResponseModel deleteUser(@PathVariable Integer id ){

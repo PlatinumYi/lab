@@ -21,12 +21,12 @@ public class ResourceConfig implements WebMvcConfigurer {
          *  5. 教师照片
          *  6. 设备照片
          */
-        registry.addResourceHandler("/experiment/book/**").addResourceLocations("/root/LabFiles/experiment/book/");
-        registry.addResourceHandler("/experiment/homework/**").addResourceLocations("/root/LabFiles/experiment/homework/");
-        registry.addResourceHandler("/data/**").addResourceLocations("/root/LabFiles/data/");
-        registry.addResourceHandler("/picture/lab/**").addResourceLocations("/root/LabFiles/picture/lab/");
-        registry.addResourceHandler("/picture/teacher/**").addResourceLocations("/root/LabFiles/Lab/picture/teacher/");
-        registry.addResourceHandler("/picture/equipment/**").addResourceLocations("/root/LabFiles/picture/equipment/");
+        registry.addResourceHandler("/experiment/guide/**").addResourceLocations("file:/root/LabFiles/experiment/guide/");
+        registry.addResourceHandler("/experiment/homework/**").addResourceLocations("file:/root/LabFiles/experiment/homework/");
+        registry.addResourceHandler("/data/**").addResourceLocations("file:/root/LabFiles/data/");
+        registry.addResourceHandler("/picture/lab/**").addResourceLocations("file:/root/LabFiles/picture/lab/");
+        registry.addResourceHandler("/picture/teacher/**").addResourceLocations("file:/root/LabFiles/Lab/picture/teacher/");
+        registry.addResourceHandler("/picture/equipment/**").addResourceLocations("file:/root/LabFiles/picture/equipment/");
 
 
     }

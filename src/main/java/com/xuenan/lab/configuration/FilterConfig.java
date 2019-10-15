@@ -20,6 +20,7 @@ public class FilterConfig {
         bean.addUrlPatterns("/user/multi/register");
         bean.addUrlPatterns("/user/enable/*");
         bean.addUrlPatterns("/user/delete/*");
+        bean.addUrlPatterns("/user/reset/*");
         bean.addUrlPatterns("/user/type/*");
         bean.addUrlPatterns("/information/photo/delete/*");
         bean.addUrlPatterns("/information/photo/name/*");
@@ -38,11 +39,14 @@ public class FilterConfig {
         bean.addUrlPatterns("/information/notice/update/*");
         bean.addUrlPatterns("/information/notice/delete/*");
         bean.addUrlPatterns("/information/notice/all/invalid");
+        bean.addUrlPatterns("/room/ban/*");
+        bean.addUrlPatterns("/room/enable/*");
+        bean.addUrlPatterns("/room/new");
         return bean;
     }
 
     @Bean
-    public FilterRegistrationBean teahcerFilterRegistrationBean(){
+    public FilterRegistrationBean teacherFilterRegistrationBean(){
         FilterRegistrationBean bean = new FilterRegistrationBean();
         bean.setFilter(new TeacherFilter());
         bean.addUrlPatterns("/experiment/self");
