@@ -67,10 +67,19 @@ public class EquipmentManagementServiceImpl implements EquipmentManagementServic
         if (records == null || records.size() < 1) {
             responseModel = new ResponseModel(111, "您还没有预约设备");
         } else {
+            List<Map<String, Object>> model = new ArrayList<>();
             for (EquipmentReservationRecord record : records) {
+                Map<String, Object> map = new HashMap<>();
                 responseModel = new ResponseModel();
-                responseModel.setData(records);
+                EquipmentInformation information = equipmentManagementDao.getEquipmentById(record.getEquipmentId());
+                map.put("equipmentId", record.getEquipmentId());
+                map.put("equipmentName", information.getName());
+                map.put("userId", record.getUserId());
+                map.put("reserveTime", record.getReserveTime());
+                map.put("reserveDuration", record.getReserveDuration());
+                model.add(map);
             }
+            responseModel.setData(model);
         }
         return responseModel;
     }
@@ -79,12 +88,12 @@ public class EquipmentManagementServiceImpl implements EquipmentManagementServic
     public ResponseModel getReservationRecordByEquipmentId(Integer equipmentId) {
         ResponseModel responseModel = null;
         List<EquipmentReservationRecord> records = equipmentManagementDao.getReservationRecordByEquipmentId(equipmentId);
-        if (records == null || records.size() < 1){
+        if (records == null || records.size() < 1) {
             responseModel = new ResponseModel(111, "该设备尚无预约记录");
-        } else{
+        } else {
             responseModel = new ResponseModel();
             List<Map<String, Object>> model = new ArrayList<>();
-            for (EquipmentReservationRecord record: records) {
+            for (EquipmentReservationRecord record : records) {
                 //map.clear();
                 Map<String, Object> map = new HashMap<>();
                 map.put("reservedDate", record.getReserveTime());
@@ -213,32 +222,47 @@ public class EquipmentManagementServiceImpl implements EquipmentManagementServic
                 responseModel = new ResponseModel();
             } else {
                 // 当前时间
-                Calendar now = Calendar.getInstance();
+                Calendar now = Calendar.getInstance(TimeZone.getTimeZone("GMT+8"));
                 now.setTime(new Date());
-                now.add(Calendar.HOUR_OF_DAY, 4); // 只允许提前五天预约
+                now.add(Calendar.DAY_OF_MONTH, 4); // 只允许提前五天预约
+                System.out.println("now:" + now);
 
                 // 预约使用的时间
                 Calendar reserve = Calendar.getInstance();
                 reserve.setTime(reserveTime);
+                System.out.println("reserve:" + reserve);
 
                 // 通过检查预约记录判断当前设备在预约时段是否可用
+                boolean flag = false; //表示是否可以预约
                 for (EquipmentReservationRecord record : equipmentReservationRecords) {
-
-                    if (record.getReserveTime().equals(reserveTime) && (record.getStatus() == 1)) {
-                        // 只需检查记录中与预约时间同天的，且已经被同意的预约记录
-                        if (reserve.after(now) && (record.getReserveDuration() & reserveDuration) != 0) {
-                            // 按位与操作，若记录中和预约请求有同为1的位，则会预约失败
-                            // 例如：记录中有111（预约早中晚），而预约请求中为100（只预约早上），按位与操作不是0，预约失败；
-                            // 但若记录中为110（预约早上和下午），请求为001（只预约晚上），按位与操作为0，预约可以成功
-                            // 预约的时间大于当前时间加上4，即提前五天以内，可以预约
-                            equipmentManagementDao.reserveEquipment(equipmentId, userId, reserveTime, reserveDuration);
-                            responseModel = new ResponseModel();
+                    if (record.getStatus() == 1) {
+                        if (!record.getReserveTime().equals(reserveTime)) {
+                            flag = true;
                         } else {
-                            responseModel = new ResponseModel(111, "该设备已被预约，请选择其他时间或其他设备");
+                            // 只需检查记录中与预约时间同天的，且已经被同意的预约记录
+                            if (reserve.before(now) && (record.getReserveDuration() & reserveDuration) != 0) {
+                                // 按位与操作，若记录中和预约请求有同为1的位，则会预约失败
+                                // 例如：记录中有111（预约早中晚），而预约请求中为100（只预约早上），按位与操作不是0，预约失败；
+                                // 但若记录中为110（预约早上和下午），请求为001（只预约晚上），按位与操作为0，预约可以成功
+                                // 预约的时间大于当前时间加上4，即提前五天以内，可以预约
+                                System.out.println("situation 1");
+                                flag = true;
+                            } else {
+                                System.out.println("situation 2");
+                                responseModel = new ResponseModel(111, "该设备已被预约，请选择其他时间或其他设备");
+                            }
                         }
+                    }else {
+                        responseModel = new ResponseModel(112, "预约失败");
                     }
                 }
+                if (flag) {
+                    equipmentManagementDao.reserveEquipment(equipmentId, userId, reserveTime, reserveDuration);
+                    responseModel = new ResponseModel();
+                }
             }
+        }else{
+            responseModel = new ResponseModel(112, "您的预约超过限制");
         }
         return responseModel;
     }

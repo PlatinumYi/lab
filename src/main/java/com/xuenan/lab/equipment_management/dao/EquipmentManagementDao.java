@@ -25,6 +25,9 @@ public interface EquipmentManagementDao {
     @Select("SELECT * FROM equipment_information WHERE valid=0")
     List<EquipmentInformation> getReservedEquipments();
 
+    @Select("SELECT * FROM equipment_information WHERE id=#{equipmentId}")
+    EquipmentInformation getEquipmentById(Integer equipmentId);
+
     @Select("SELECT * FROM equipment_reservation_record WHERE equipment_id=#{equipmentId}")
     List<EquipmentReservationRecord> getReservationRecordByEquipmentId(Integer equipmentId);
 
@@ -41,11 +44,10 @@ public interface EquipmentManagementDao {
      * @param userId 用户id
      * @param reserveTime 预约的设备使用时间
      * @param reserveDuration 预约时长
-     * @return 受影响的行数
      */
-    @Insert("INSERT INTO equipment_reservation_record (equipment_id, user_id, reserve_time, reserve_duration, status) " +
-            "VALUES (#{equipmentId}, #{userId}, #{reserveTime, jdbcType=TIMESTAMP}, #{reserveDuration}, 1)")
-    Integer reserveEquipment(@Param("equipmentId") Integer equipmentId,
+    @Insert("INSERT INTO equipment_reservation_record (equipment_id, user_id, reserve_time, reserve_duration) " +
+            "VALUES (#{equipmentId}, #{userId}, #{reserveTime, jdbcType=TIMESTAMP}, #{reserveDuration})")
+    void reserveEquipment(@Param("equipmentId") Integer equipmentId,
                              @Param("userId") Integer userId,
                              @Param("reserveTime") Date reserveTime,
                              @Param("reserveDuration") Integer reserveDuration);

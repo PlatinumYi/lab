@@ -64,15 +64,19 @@ public class EquipmentManagementController {
     //}
 
     @PostMapping("/reservationRecord")
-    ResponseModel reserveEquipment(@RequestParam("equipmentId") Integer equipmentId,
-                                   @RequestParam("userId") Integer userId,
+    ResponseModel reserveEquipment(@RequestParam("equipmentId") String equipmentIdS,
+                                   @RequestParam("userId") String userIdS,
                                    @RequestParam("reserveTime") String reserveTime,
-                                   @RequestParam("reserveDuration") Integer reserveDuration){
+                                   @RequestParam("reserveDuration") String reserveDurationS){
         //用LocalDate类解析"yyyy-MM-dd"，并将其转化为Date
         LocalDate reserveDate = LocalDate.parse(reserveTime);
         ZoneId zone = ZoneId.systemDefault();
         Instant instant = reserveDate.atStartOfDay().atZone(zone).toInstant();
         Date date = Date.from(instant);
+        Integer equipmentId = Integer.valueOf(equipmentIdS);
+        Integer userId = Integer.valueOf(userIdS);
+        Integer reserveDuration = Integer.valueOf(reserveDurationS);
+        //System.out.println(date);
         return equipmentManagementService.reserveEquipment(equipmentId, userId, date, reserveDuration);
     }
 
