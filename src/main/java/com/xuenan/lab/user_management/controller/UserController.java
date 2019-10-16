@@ -40,8 +40,8 @@ public class UserController {
     @PutMapping("/password")
     @ResponseBody
     public ResponseModel changePassword(HttpServletRequest request,
-                                        @Param("old_password") String oldPassword,
-                                        @Param("new_password") String newPassword){
+                                        @RequestParam("old_password") String oldPassword,
+                                        @RequestParam("new_password") String newPassword){
 
         String token = request.getHeader("token");
         return userService.changePassword(token,oldPassword,newPassword);
