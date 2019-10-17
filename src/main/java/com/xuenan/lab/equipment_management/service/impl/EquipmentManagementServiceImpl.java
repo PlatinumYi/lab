@@ -5,6 +5,7 @@ import com.xuenan.lab.entity.EquipmentReservationRecord;
 import com.xuenan.lab.equipment_management.dao.EquipmentManagementDao;
 import com.xuenan.lab.equipment_management.model.ResponseModel;
 import com.xuenan.lab.equipment_management.service.EquipmentManagementService;
+import com.xuenan.lab.tool.BeijingTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -221,26 +222,26 @@ public class EquipmentManagementServiceImpl implements EquipmentManagementServic
                 equipmentManagementDao.reserveEquipment(equipmentId, userId, reserveTime, reserveDuration);
                 responseModel = new ResponseModel();
             } else {
-                // 当前时间
-                Calendar now = Calendar.getInstance(TimeZone.getTimeZone("GMT+8"));
-                now.setTime(new Date());
-                now.add(Calendar.DAY_OF_MONTH, 4); // 只允许提前五天预约
-                System.out.println("now:" + now);
-
-                // 预约使用的时间
-                Calendar reserve = Calendar.getInstance();
-                reserve.setTime(reserveTime);
-                System.out.println("reserve:" + reserve);
+                //当前时间
+                Date now = BeijingTime.getBeijingTime(new Date());
+                long mills = now.getTime() + 1000*24*3600*4;
+                Date nowPlusDays = new Date(mills);
+                System.out.println("EquipmentManagementService:now : " + now);
+                System.out.println("EquipmentManagementService:nowPlusDays : " + nowPlusDays);
+                Date reserve = BeijingTime.getBeijingTime(reserveTime);
+                System.out.println("EquipmentManagementService:reserve : " + reserve);
 
                 // 通过检查预约记录判断当前设备在预约时段是否可用
                 boolean flag = false; //表示是否可以预约
                 for (EquipmentReservationRecord record : equipmentReservationRecords) {
+                    flag = false;
                     if (record.getStatus() == 1) {
                         if (!record.getReserveTime().equals(reserveTime)) {
+                            // 记录中的预约记录与预约时间不同日, 可以直接预约
                             flag = true;
                         } else {
                             // 只需检查记录中与预约时间同天的，且已经被同意的预约记录
-                            if (reserve.before(now) && (record.getReserveDuration() & reserveDuration) != 0) {
+                            if (reserve.before(nowPlusDays) && (record.getReserveDuration() & reserveDuration) != 0) {
                                 // 按位与操作，若记录中和预约请求有同为1的位，则会预约失败
                                 // 例如：记录中有111（预约早中晚），而预约请求中为100（只预约早上），按位与操作不是0，预约失败；
                                 // 但若记录中为110（预约早上和下午），请求为001（只预约晚上），按位与操作为0，预约可以成功
@@ -257,7 +258,9 @@ public class EquipmentManagementServiceImpl implements EquipmentManagementServic
                     }
                 }
                 if (flag) {
-                    equipmentManagementDao.reserveEquipment(equipmentId, userId, reserveTime, reserveDuration);
+                    //long mill0 = reserve.getTime() + 24*3600*1000;
+                    //Date
+                    equipmentManagementDao.reserveEquipment(equipmentId, userId, reserve, reserveDuration);
                     responseModel = new ResponseModel();
                 }
             }

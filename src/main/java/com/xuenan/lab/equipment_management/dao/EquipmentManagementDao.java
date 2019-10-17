@@ -32,7 +32,7 @@ public interface EquipmentManagementDao {
     List<EquipmentReservationRecord> getReservationRecordByEquipmentId(Integer equipmentId);
 
     // 一个人最多预约五台实验设备
-    @Select("SELECT * FROM equipment_reservation_record WHERE user_id=#{userId} and reserve_time > now()")
+    @Select("SELECT * FROM equipment_reservation_record WHERE user_id=#{userId} and reserve_time >= now()")
     List<EquipmentReservationRecord> getReservationRecord(@Param("userId") Integer userId);
 
     @Select("SELECT * FROM equipment_information WHERE name=#{name, jdbcType=VARCHAR}")
@@ -46,7 +46,7 @@ public interface EquipmentManagementDao {
      * @param reserveDuration 预约时长
      */
     @Insert("INSERT INTO equipment_reservation_record (equipment_id, user_id, reserve_time, reserve_duration) " +
-            "VALUES (#{equipmentId}, #{userId}, #{reserveTime, jdbcType=TIMESTAMP}, #{reserveDuration})")
+            "VALUES (#{equipmentId}, #{userId}, #{reserveTime, jdbcType=DATE}, #{reserveDuration})")
     void reserveEquipment(@Param("equipmentId") Integer equipmentId,
                              @Param("userId") Integer userId,
                              @Param("reserveTime") Date reserveTime,
