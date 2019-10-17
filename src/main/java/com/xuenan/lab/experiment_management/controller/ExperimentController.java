@@ -1,5 +1,7 @@
 package com.xuenan.lab.experiment_management.controller;
 
+import com.xuenan.lab.entity.LoginSession;
+import com.xuenan.lab.entity.User;
 import com.xuenan.lab.experiment_management.model.ResponseModel;
 import com.xuenan.lab.experiment_management.service.ExperimentService;
 import com.xuenan.lab.user_management.service.LoginSessionService;
@@ -91,11 +93,12 @@ public class ExperimentController {
             HttpServletRequest request,
             @PathVariable Integer id){
         String token = request.getHeader("token");
-        Integer user_id = loginSessionService.queryValidLoginSessionByToken(token).getUser().getId();
+        LoginSession session = loginSessionService.queryValidLoginSessionByToken(token);
+        Integer user_id = session==null?0:session.getUser().getId();
         return experimentService.getFile(user_id,id);
     }
 
-    @GetMapping("/excel")
+    @GetMapping("/record/excel")
     @ResponseBody
     public ResponseModel getClassExcel(HttpServletRequest request) {
         return experimentService.getRecord();

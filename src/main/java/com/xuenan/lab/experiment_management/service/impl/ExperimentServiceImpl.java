@@ -2,6 +2,7 @@ package com.xuenan.lab.experiment_management.service.impl;
 
 import com.xuenan.lab.entity.Experiment;
 import com.xuenan.lab.entity.Report;
+import com.xuenan.lab.entity.Room;
 import com.xuenan.lab.experiment_management.dao.ExperimentDao;
 import com.xuenan.lab.experiment_management.dao.ReportDao;
 import com.xuenan.lab.experiment_management.model.ResponseModel;
@@ -18,6 +19,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -187,7 +190,7 @@ public class ExperimentServiceImpl implements ExperimentService {
         if( experiment == null ){
             model = new ResponseModel(4003,"目标实验不存在");
         } else if( user_id != experiment.getStarterId()){
-            model = new ResponseModel(4011,"不能开始非本人发起的实验的签到");
+            model = new ResponseModel(4011,"不能查看非本人发起的实验选课记录");
         }else {
             List<Report> reports = reportDao.queryReportByExperimentId(id);
             HSSFWorkbook workbook = new HSSFWorkbook();
@@ -235,18 +238,19 @@ public class ExperimentServiceImpl implements ExperimentService {
         }else {
             HSSFWorkbook workbook = new HSSFWorkbook();
             String[] title = {"课程名称","课程说明","任课教师","上课时间","上课地点","选课人数"} ;
-            HSSFSheet sheet = workbook.createSheet("选课情况");
+            HSSFSheet sheet = workbook.createSheet("开课情况");
             HSSFRow row = sheet.createRow(0);
             for( int i=0 ; i<title.length ; i++ ){
                 row.createCell(i).setCellValue(title[i]);
             }
             for( int i=1 ; i<=experiments.size() ; i++ ){
                 row = sheet.createRow(i);
+                Room room = experiments.get(i-1).getRoom();
                 row.createCell(0).setCellValue(experiments.get(i-1).getName());
                 row.createCell(1).setCellValue(experiments.get(i-1).getInstruction());
                 row.createCell(2).setCellValue(experiments.get(i-1).getTeacherName());
-                row.createCell(3).setCellValue(experiments.get(i-1).getReportUntil());
-                row.createCell(4).setCellValue(experiments.get(i-1).getRoom().getName());
+                row.createCell(3).setCellValue(new SimpleDateFormat("yyyy-MM-dd").format(experiments.get(i-1).getReportUntil()));
+                row.createCell(4).setCellValue(room==null?" ":room.getName());
                 row.createCell(5).setCellValue(experiments.get(i-1).getCurrentStudentNumber());
             }
 

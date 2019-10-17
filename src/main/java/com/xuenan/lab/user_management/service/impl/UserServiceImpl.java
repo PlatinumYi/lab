@@ -122,13 +122,14 @@ import java.util.List;
         if( session == null ){
             model = new ResponseModel(2007,"目标用户不存在");
         }else {
-            User user = session.getUser();
             oldPassword = MD5Tools.MD5(oldPassword);
             newPassword = MD5Tools.MD5(newPassword);
-            Integer result = userDao.changePassword(user.getId(),newPassword,oldPassword);
-            if( result<= 0 ){
+            User user = userDao.queryUserBySchoolNumberAndPassword(session.getUser().getSchoolNumber(),oldPassword);
+
+            if( user == null  ){
                 model = new ResponseModel(2019,"修改密码失败，请确保原密码正确");
             }else {
+                Integer result = userDao.changePassword(user.getId(),newPassword);
                 model = new ResponseModel();
             }
         }
@@ -259,7 +260,8 @@ import java.util.List;
         }else if( user.getType()  == 3 ){
             model = new ResponseModel(2008,"不能操作管理员");
         }else {
-            Integer result = userDao.resetPassword(id);
+            String originPass = MD5Tools.MD5("123456");
+            Integer result = userDao.resetPassword(id,originPass);
             if(result>0){
                 model = new ResponseModel() ;
             }else {
