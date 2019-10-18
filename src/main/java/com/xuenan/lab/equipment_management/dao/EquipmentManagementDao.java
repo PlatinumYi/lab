@@ -31,6 +31,12 @@ public interface EquipmentManagementDao {
     @Select("SELECT * FROM equipment_reservation_record WHERE equipment_id=#{equipmentId}")
     List<EquipmentReservationRecord> getReservationRecordByEquipmentId(Integer equipmentId);
 
+    @Select("SELECT * FROM equipment_reservation_record WHERE equipment_id=#{equipmentId} AND user_id=#{userId} AND " +
+            "reserve_time=#{reserveTime} AND reserve_duration=#{reserveDuration}")
+    EquipmentReservationRecord getOneReservationRecord(@Param("equipmentId") Integer equipmentId,
+                                                       @Param("userId") Integer userId,
+                                                       @Param("reserveTime") Date reserveTime,
+                                                       @Param("reserveDuration") Integer reserveDuration);
     // 一个人最多预约五台实验设备
     @Select("SELECT * FROM equipment_reservation_record WHERE user_id=#{userId} and reserve_time >= now()")
     List<EquipmentReservationRecord> getReservationRecord(@Param("userId") Integer userId);

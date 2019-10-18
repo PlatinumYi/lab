@@ -261,7 +261,9 @@ public class EquipmentManagementServiceImpl implements EquipmentManagementServic
                     //long mill0 = reserve.getTime() + 24*3600*1000;
                     //Date
                     equipmentManagementDao.reserveEquipment(equipmentId, userId, reserve, reserveDuration);
+                    EquipmentReservationRecord returnRecord =  equipmentManagementDao.getOneReservationRecord(equipmentId, userId, reserve, reserveDuration);
                     responseModel = new ResponseModel();
+                    responseModel.setData(returnRecord);
                 }
             }
         }else{
