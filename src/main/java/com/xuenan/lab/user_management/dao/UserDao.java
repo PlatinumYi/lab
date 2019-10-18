@@ -36,6 +36,9 @@ public interface UserDao {
     @Delete("DELETE FROM user WHERE ID=#{id} AND valid=0")
     Integer removeUserById(@Param("id") Integer id );
 
+    @Delete("DELETE FROM user WHERE valid=0")
+    Integer removeInvalidUsers();
+
     @Select("SELECT ID,SCHOOL_NUMBER,NAME,CREATED_AT,TYPE,VALID,GRADE FROM user WHERE SCHOOL_NUMBER=#{key} OR NAME LIKE CONCAT('%',#{key},'%')")
     List<User> queryUserBySchoolNumberOrName(@Param("key") String key);
 

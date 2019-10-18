@@ -15,7 +15,7 @@ public class LabInformation {
     private Integer id ;
     private String name ;
     private String introduction ;
-
+    private String fileSrc;
 
     public Integer getId() {
         return id;
@@ -38,4 +38,12 @@ public class LabInformation {
     }
 
     public void setIntroduction(String introduction) { this.introduction = introduction; }
+
+    public String getFileSrc() {
+        return fileSrc;
+    }
+
+    public void setFileSrc(String fileSrc) {
+        this.fileSrc = fileSrc;
+    }
 }

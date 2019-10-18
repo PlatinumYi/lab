@@ -113,6 +113,12 @@ public class UserController {
         return userService.deleteUser(id);
     }
 
+    @DeleteMapping("/multi/delete")
+    @ResponseBody
+    public ResponseModel deleteInvalidUsers(){
+        return userService.deleteInvalidUsers();
+    }
+
     @PutMapping("/type/{id}")
     @ResponseBody
     public ResponseModel setUserType(@PathVariable Integer id ,@RequestParam("type") Integer type ){
