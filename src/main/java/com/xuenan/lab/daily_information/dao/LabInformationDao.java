@@ -20,4 +20,8 @@ public interface LabInformationDao {
 
     @Update("UPDATE lab_information SET NAME=#{name},INTRODUCTION=#{introduction} WHERE ID=#{id}")
     Integer updateInformation(@Param("name") String name ,@Param("introduction") String introduction,@Param("id") Integer id);
+
+    @Update("UPDATE lab_information SET FILE_SRC=#{fileSrc} WHERE ID=#{id}")
+    Integer updateFile(@Param("fileSrc") String fileSrc ,@Param("id") Integer id);
+
 }

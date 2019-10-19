@@ -18,5 +18,6 @@ public interface UserService {
     ResponseModel enableUser( Integer id );
     ResponseModel setUserType( Integer id , Integer type) ;
     ResponseModel deleteUser( Integer id );
+    ResponseModel deleteInvalidUsers();
     ResponseModel queryUserByNameOrSchoolNumber( String key) ;
 }

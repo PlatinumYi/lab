@@ -5,10 +5,8 @@ import com.xuenan.lab.daily_information.service.LabInformationService;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @RequestMapping("/information/lab")
@@ -27,6 +25,12 @@ public class LabInformationController {
     @ResponseBody
     public ResponseModel edit(@Param("name") String name ,@Param("introduction") String introduction ){
         return labInformationService.editLabInformation(name,introduction);
+    }
+
+    @PutMapping("/file")
+    @ResponseBody
+    public ResponseModel file(@Param("name") MultipartFile file){
+        return labInformationService.changeFile(file);
     }
 
 }

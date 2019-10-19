@@ -132,9 +132,6 @@ public class EquipmentInformationServiceImpl implements EquipmentInformationServ
 
 
         String suffix = fileName.substring(fileName.lastIndexOf(".")+1);
-        if( !suffix.equals("jpg") && !suffix.equals("png") ){
-            model = new ResponseModel(1212,"非法的文件后缀名");
-        }else {
 
             Date date = new Date();
             String currentMills = String.valueOf(date.getTime());
@@ -147,7 +144,7 @@ public class EquipmentInformationServiceImpl implements EquipmentInformationServ
             }catch (IOException e){
                 model = new ResponseModel(1213,"文件存储失败");
             }
-        }
+
 
         return model ;
     }

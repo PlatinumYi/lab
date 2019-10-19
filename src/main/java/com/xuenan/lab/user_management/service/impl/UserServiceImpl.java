@@ -334,6 +334,15 @@ import java.util.List;
     }
 
     @Override
+    public ResponseModel deleteInvalidUsers() {
+
+        ResponseModel model = new ResponseModel();
+        userDao.removeInvalidUsers();
+        return model ;
+
+    }
+
+    @Override
     public ResponseModel queryUserByNameOrSchoolNumber(String key) {
         List<User> users = userDao.queryUserBySchoolNumberOrName(key);
         ResponseModel model = new ResponseModel() ;
