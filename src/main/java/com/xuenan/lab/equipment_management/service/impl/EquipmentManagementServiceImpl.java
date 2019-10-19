@@ -97,6 +97,9 @@ public class EquipmentManagementServiceImpl implements EquipmentManagementServic
             for (EquipmentReservationRecord record : records) {
                 //map.clear();
                 Map<String, Object> map = new HashMap<>();
+                map.put("recordId", record.getId());
+                map.put("userId", record.getUserId());
+                map.put("equipmentId", record.getEquipmentId());
                 map.put("reservedDate", record.getReserveTime());
                 map.put("reservedDuration", record.getReserveDuration());
                 model.add(map);
