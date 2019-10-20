@@ -68,19 +68,25 @@ public class EquipmentManagementServiceImpl implements EquipmentManagementServic
         if (records == null || records.size() < 1) {
             responseModel = new ResponseModel(111, "您还没有预约设备");
         } else {
-            List<Map<String, Object>> model = new ArrayList<>();
-            for (EquipmentReservationRecord record : records) {
-                Map<String, Object> map = new HashMap<>();
-                responseModel = new ResponseModel();
-                EquipmentInformation information = equipmentManagementDao.getEquipmentById(record.getEquipmentId());
-                map.put("equipmentId", record.getEquipmentId());
-                map.put("equipmentName", information.getName());
-                map.put("userId", record.getUserId());
-                map.put("reserveTime", record.getReserveTime());
-                map.put("reserveDuration", record.getReserveDuration());
-                model.add(map);
+            try {
+                List<Map<String, Object>> model = new ArrayList<>();
+                for (EquipmentReservationRecord record : records) {
+                    Map<String, Object> map = new HashMap<>();
+                    responseModel = new ResponseModel();
+                    EquipmentInformation information = equipmentManagementDao.getEquipmentById(record.getEquipmentId());
+                    map.put("recordId", record.getId());
+                    map.put("equipmentId", record.getEquipmentId());
+                    map.put("equipmentName", information.getName());
+                    map.put("userId", record.getUserId());
+                    map.put("reserveTime", record.getReserveTime());
+                    map.put("reserveDuration", record.getReserveDuration());
+                    model.add(map);
+                }
+                responseModel.setData(model);
+            }catch (Exception e){
+                responseModel = new ResponseModel(112, "操作失败，请重试");
             }
-            responseModel.setData(model);
+
         }
         return responseModel;
     }
@@ -92,19 +98,23 @@ public class EquipmentManagementServiceImpl implements EquipmentManagementServic
         if (records == null || records.size() < 1) {
             responseModel = new ResponseModel(111, "该设备尚无预约记录");
         } else {
-            responseModel = new ResponseModel();
-            List<Map<String, Object>> model = new ArrayList<>();
-            for (EquipmentReservationRecord record : records) {
-                //map.clear();
-                Map<String, Object> map = new HashMap<>();
-                map.put("recordId", record.getId());
-                map.put("userId", record.getUserId());
-                map.put("equipmentId", record.getEquipmentId());
-                map.put("reservedDate", record.getReserveTime());
-                map.put("reservedDuration", record.getReserveDuration());
-                model.add(map);
+            try {
+                responseModel = new ResponseModel();
+                List<Map<String, Object>> model = new ArrayList<>();
+                for (EquipmentReservationRecord record : records) {
+                    //map.clear();
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("recordId", record.getId());
+                    map.put("userId", record.getUserId());
+                    map.put("equipmentId", record.getEquipmentId());
+                    map.put("reservedDate", record.getReserveTime());
+                    map.put("reservedDuration", record.getReserveDuration());
+                    model.add(map);
+                }
+                responseModel.setData(model);
+            } catch (Exception e) {
+                responseModel = new ResponseModel(112, "操作失败，请重试");
             }
-            responseModel.setData(model);
         }
         return responseModel;
     }
@@ -227,7 +237,7 @@ public class EquipmentManagementServiceImpl implements EquipmentManagementServic
             } else {
                 //当前时间
                 Date now = BeijingTime.getBeijingTime(new Date());
-                long mills = now.getTime() + 1000*24*3600*4;
+                long mills = now.getTime() + 1000 * 24 * 3600 * 4;
                 Date nowPlusDays = new Date(mills);
                 System.out.println("EquipmentManagementService:now : " + now);
                 System.out.println("EquipmentManagementService:nowPlusDays : " + nowPlusDays);
@@ -256,20 +266,25 @@ public class EquipmentManagementServiceImpl implements EquipmentManagementServic
                                 responseModel = new ResponseModel(111, "该设备已被预约，请选择其他时间或其他设备");
                             }
                         }
-                    }else {
+                    } else {
                         responseModel = new ResponseModel(112, "预约失败");
                     }
                 }
                 if (flag) {
                     //long mill0 = reserve.getTime() + 24*3600*1000;
                     //Date
-                    equipmentManagementDao.reserveEquipment(equipmentId, userId, reserve, reserveDuration);
-                    EquipmentReservationRecord returnRecord =  equipmentManagementDao.getOneReservationRecord(equipmentId, userId, reserve, reserveDuration);
-                    responseModel = new ResponseModel();
-                    responseModel.setData(returnRecord);
+                    try{
+                        equipmentManagementDao.reserveEquipment(equipmentId, userId, reserve, reserveDuration);
+                        EquipmentReservationRecord returnRecord = equipmentManagementDao.getOneReservationRecord(equipmentId, userId, reserve, reserveDuration);
+                        responseModel = new ResponseModel();
+                        responseModel.setData(returnRecord);
+                    }catch (Exception e){
+                        responseModel = new ResponseModel(112, "操作失败，请稍候再试");
+                    }
+
                 }
             }
-        }else{
+        } else {
             responseModel = new ResponseModel(112, "您的预约超过限制");
         }
         return responseModel;

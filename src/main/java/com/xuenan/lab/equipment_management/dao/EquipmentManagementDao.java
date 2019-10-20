@@ -38,7 +38,7 @@ public interface EquipmentManagementDao {
                                                        @Param("reserveTime") Date reserveTime,
                                                        @Param("reserveDuration") Integer reserveDuration);
     // 一个人最多预约五台实验设备
-    @Select("SELECT * FROM equipment_reservation_record WHERE user_id=#{userId} and reserve_time >= now()")
+    @Select("SELECT * FROM equipment_reservation_record WHERE user_id=#{userId} and reserve_time >= (now()-INTERVAL 1 day)")
     List<EquipmentReservationRecord> getReservationRecord(@Param("userId") Integer userId);
 
     @Select("SELECT * FROM equipment_information WHERE name=#{name, jdbcType=VARCHAR}")
