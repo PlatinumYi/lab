@@ -91,7 +91,7 @@ import java.util.List;
               Sheet sheet = wb.getSheetAt(0);
               int firstRowNum = sheet.getFirstRowNum()+1 ; //第一行是标题 舍去
               int lastRowNum = sheet.getLastRowNum();
-              for( int i=firstRowNum ; i<lastRowNum ; i++){
+              for( int i=firstRowNum ; i<=lastRowNum ; i++){
                  Row row = sheet.getRow(i);
                  int firstCellIndex = row.getFirstCellNum();
                  String studentNumber = row.getCell(firstCellIndex).toString();

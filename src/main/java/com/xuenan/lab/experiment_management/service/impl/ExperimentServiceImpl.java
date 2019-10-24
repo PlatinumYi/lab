@@ -254,7 +254,7 @@ public class ExperimentServiceImpl implements ExperimentService {
                 row.createCell(5).setCellValue(experiments.get(i-1).getCurrentStudentNumber());
             }
 
-            String fileName = RandomSessionKey.getRandomChar(35)+".xls" ;
+            String fileName = "ExperimentRecord"+".xls" ;
             File file = new File(LOCAL_STORAGE+DATA_URL+fileName);
             if( file.exists() ){
                 file.delete() ;

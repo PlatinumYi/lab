@@ -25,7 +25,7 @@ public class ResourceConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/experiment/homework/**").addResourceLocations("file:/root/LabFiles/experiment/homework/");
         registry.addResourceHandler("/data/**").addResourceLocations("file:/root/LabFiles/data/");
         registry.addResourceHandler("/picture/lab/**").addResourceLocations("file:/root/LabFiles/picture/lab/");
-        registry.addResourceHandler("/picture/teacher/**").addResourceLocations("file:/root/LabFiles/Lab/picture/teacher/");
+        registry.addResourceHandler("/picture/teacher/**").addResourceLocations("file:/root/LabFiles/picture/teacher/");
         registry.addResourceHandler("/picture/equipment/**").addResourceLocations("file:/root/LabFiles/picture/equipment/");
 
 

@@ -2,13 +2,22 @@ package com.xuenan.lab.equipment_management.service.impl;
 
 import com.xuenan.lab.entity.EquipmentInformation;
 import com.xuenan.lab.entity.EquipmentReservationRecord;
+import com.xuenan.lab.entity.User;
 import com.xuenan.lab.equipment_management.dao.EquipmentManagementDao;
 import com.xuenan.lab.equipment_management.model.ResponseModel;
 import com.xuenan.lab.equipment_management.service.EquipmentManagementService;
 import com.xuenan.lab.tool.BeijingTime;
+import com.xuenan.lab.user_management.dao.UserDao;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -19,9 +28,19 @@ import java.util.*;
 @Service("EquipmentManagementService")
 public class EquipmentManagementServiceImpl implements EquipmentManagementService {
 
+    private static final long MAX_GUIDE_BOOK_SIZE = 1024*1024*20;
+
+    private static final String LOCAL_STORAGE ="/root/LabFiles" ;
+
+    private static final String MODULE_URL = "/experiment/guide/" ;
+
+    private static final String DATA_URL = "/data/" ;
+
     @Autowired
     EquipmentManagementDao equipmentManagementDao;
 
+    @Autowired
+    UserDao userDao ;
     @Override
     public ResponseModel getAllEquipments() {
         ResponseModel responseModel;
@@ -242,7 +261,7 @@ public class EquipmentManagementServiceImpl implements EquipmentManagementServic
                 System.out.println("EquipmentManagementService:now : " + now);
                 System.out.println("EquipmentManagementService:nowPlusDays : " + nowPlusDays);
                 Date reserve = BeijingTime.getBeijingTime(reserveTime);
-                System.out.println("EquipmentManagementService:reserve : " + reserve);
+                System.out.println ("EquipmentManagementService:reserve : " + reserve);
 
                 // 通过检查预约记录判断当前设备在预约时段是否可用
                 boolean flag = false; //表示是否可以预约
@@ -300,5 +319,77 @@ public class EquipmentManagementServiceImpl implements EquipmentManagementServic
             responseModel = new ResponseModel(112, "操作失败，请重试");
         }
         return responseModel;
+    }
+
+    @Override
+    public ResponseModel getReservationRecordExcel() {
+        ResponseModel model ;
+        List<EquipmentReservationRecord>  records = equipmentManagementDao.getAllReservationRecord() ;
+        if( records == null ){
+            model = new ResponseModel(113,"获取记录数据失败");
+        }else {
+            HSSFWorkbook workbook = new HSSFWorkbook();
+            String[] title = {"设备名称","借用人员姓名","借用人员学号","借用时间","审批情况"} ;
+            HSSFSheet sheet = workbook.createSheet("借用记录");
+            HSSFRow row = sheet.createRow(0);
+            for( int i=0 ; i<title.length ; i++ ){
+                row.createCell(i).setCellValue(title[i]);
+            }
+            for( int i=1 ; i<=records.size() ; i++ ){
+                row = sheet.createRow(i);
+                EquipmentReservationRecord record = records.get(i);
+                if( record.getEquipmentId() != null ) {
+                    EquipmentInformation information = equipmentManagementDao.getEquipmentById(record.getId());
+                    row.createCell(0).setCellValue(information.getName());
+                }
+                if( record.getUserId() != null ) {
+                    User user = userDao.queryUserById(record.getUserId());
+                    row.createCell(1).setCellValue(user.getName());
+                    row.createCell(2).setCellValue(user.getSchoolNumber());
+                }
+                if( record.getReserveTime() != null ) {
+                    String duration = "" ;
+                    if( record.getReserveDuration() != null ){
+                        Integer num = record.getReserveDuration();
+                        if( num>4 ){
+                            duration = duration + "早晨 " ;
+                            num -= 4;
+                        }
+                        if( num>2 ){
+                            duration = duration + "下午 " ;
+                            num -= 2;
+                        }
+                        if( num>1 ){
+                            duration = duration + "晚上 " ;
+                            num -= 1;
+                        }
+                    }
+                    row.createCell(3).setCellValue(new SimpleDateFormat("yyyy-MM-dd").format(record.getReserveTime())+duration);
+                }
+                if( record.getStatus() != null ) {
+                    row.createCell(4).setCellValue(record.getStatus()==1?"是":"否");
+                }
+            }
+
+            String fileName = "EquipmentReservationRecord"+".xls" ;
+            File file = new File(LOCAL_STORAGE+DATA_URL+fileName);
+            if( file.exists() ){
+                file.delete() ;
+            }
+
+            try {
+                FileOutputStream outputStream = new FileOutputStream(file);
+                workbook.write(outputStream);
+                outputStream.close();
+            } catch (IOException e) {
+                model = new ResponseModel(114,"导出设备预约记录失败");
+                return model ;
+            }
+
+            model = new ResponseModel();
+            model.setData(DATA_URL+fileName);
+
+        }
+        return model ;
     }
 }

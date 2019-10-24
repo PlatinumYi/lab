@@ -75,4 +75,6 @@ public interface EquipmentManagementService {
      * @return 数据模型
      */
     ResponseModel approveReservation(Integer teacherId, Integer reservationId, Integer opinion);
+
+    ResponseModel getReservationRecordExcel();
 }

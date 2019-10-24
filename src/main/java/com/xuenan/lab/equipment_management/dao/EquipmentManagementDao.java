@@ -44,6 +44,9 @@ public interface EquipmentManagementDao {
     @Select("SELECT * FROM equipment_information WHERE name=#{name, jdbcType=VARCHAR}")
     List<EquipmentInformation> getEquipmentByName(@Param("name") String name);
 
+    @Select("SELECT * FROM equipment_reservation_record")
+    List<EquipmentReservationRecord> getAllReservationRecord();
+
     /**
      * 预约实验设备
      * @param equipmentId 实验设备id
@@ -73,4 +76,6 @@ public interface EquipmentManagementDao {
     Integer approveReservation(@Param("teacherId") Integer teacherId,
                                @Param("reservationId") Integer reservationId,
                                @Param("opinion") Integer opinion);
+
+
 }

@@ -49,6 +49,10 @@ public class EquipmentManagementController {
         return equipmentManagementService.getEquipmentByName(name);
     }
 
+    @GetMapping("/excel")
+    ResponseModel getReservationRecordExcel(){
+        return equipmentManagementService.getReservationRecordExcel();
+    }
     //  2019-08-31前的需求代码
     //@PostMapping("/reservationRecord")
     //ResponseModel reserveEquipment(HttpServletRequest request) throws ParseException {
